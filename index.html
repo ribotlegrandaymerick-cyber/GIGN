@@ -690,13 +690,13 @@ async function connectDb() {
   try {
     // Vérification de la connexion
     const { data: { session }, error: sessionError } =
-      await supabase.auth.getSession();
+      await supabaseClient.auth.getSession();
 
     if (sessionError) throw sessionError;
 
     // Chargement des agents
     const { data: agentsData, error: agentsError } =
-      await supabase.from('agents')
+      await supabaseClient.from('agents')
         .select('*')
         .order('created_at', { ascending: true });
 
@@ -709,7 +709,7 @@ async function connectDb() {
 
     // Chargement des plaintes
     const { data: complaintsData, error: complaintsError } =
-      await supabase.from('complaints')
+      await supabaseClient.from('complaints')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(100);
@@ -720,7 +720,7 @@ async function connectDb() {
 
     // Chargement des dossiers
     const { data: casesData, error: casesError } =
-      await supabase.from('case_files')
+      await supabaseClient.from('case_files')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(200);
@@ -731,7 +731,7 @@ async function connectDb() {
 
     // Chargement des rapports
     const { data: reportsData, error: reportsError } =
-      await supabase.from('reports')
+      await supabaseClient.from('reports')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(100);
