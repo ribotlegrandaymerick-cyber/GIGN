@@ -1076,18 +1076,59 @@ $('#f-paie').mois.addEventListener('change', autoPay);
 const nowLocal = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 $('#f-rap').quand.value = nowLocal();
 
+
 $('#f-agent').addEventListener('submit', async e => {
   e.preventDefault();
-  if (!auth) return;
-  const f = e.target, id = Math.max(0, ...agents.map(a => a.id)) + 1, mat = 'GIGN-' + String(id).padStart(4, '0');
-  agents.push({ id, nom: f.nom.value.trim(), mat, mdp: await sha(mat + ':' + f.mdp.value), grade: +f.grade.value, hist: [{ date: today(), txt: 'Intégration au groupe' }] });
-  f.nom.value = '';
-  f.mdp.value = '';
-  save(); render();
+
+  if (!auth || !live) return;
+
+  const f = e.target;
+  const name = f.nom.value.trim();
+  const password = f.mdp.value;
+  const grade = GRADES[Number(f.grade.value)];
+
+  if (!name || password.length < 8 || !grade) {
+    alert('Vérifie les informations saisies.');
+    return;
+  }
+
+  const numbers = agents.map(a =>
+    Number(String(a.matricule || '').replace('GIGN-', ''))
+  ).filter(Number.isFinite);
+
+  const nextNumber = Math.max(0, ...numbers) + 1;
+  const matricule = 'GIGN-' + String(nextNumber).padStart(4, '0');
+
+  try {
+    const { data, error } =
+      await gignDatabase.functions.invoke('gign-create-agent', {
+        body: { name, matricule, grade, password }
+      });
+
+    if (error) throw error;
+    if (!data?.success || !data.agent) {
+      throw new Error(data?.error || 'Création impossible');
+    }
+
+    agents.push(data.agent);
+
+    f.reset();
+    render();
+
+    setSync('Agent créé avec succès dans Supabase.');
+
+  } catch (err) {
+    console.error('Erreur création agent :', err);
+    alert('Impossible de créer cet agent. Vérifie les permissions Supabase.');
+  }
 });
-$('#liste').addEventListener('click', e => {
+
+$('#liste').addEventListener('click', async e => {
   const id = e.target.dataset.del;
-  if (id && auth) { agents = agents.filter(a => a.id != id); save(); render(); }
+
+  if (!id || !auth || !live) return;
+
+  alert('La suppression complète des comptes agents sera configurée séparément.');
 });
 
 $('#liste').addEventListener('submit', async e => {
