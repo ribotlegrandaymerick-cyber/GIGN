@@ -286,14 +286,25 @@ form[inert]{opacity:.4}
         <div>
           <div class="panel" role="tabpanel" id="q1" aria-labelledby="e1">
             <h3>Agents du GIGN</h3>
-            <form id="f-agent">
-              <label>Nom de l’agent<input name="nom" required maxlength="40" autocomplete="off"></label>
-              <label>Mot de passe<input name="mdp" type="password" required minlength="4" autocomplete="new-password"><small>Au moins 4 caractères. L’agent se connecte avec son matricule et ce mot de passe.</small></label>
-              <label>Grade<select name="grade" class="grades"></select></label>
-              <button class="btn sm">Ajouter l’agent</button>
-            </form>
-            <div id="liste"></div>
-            
+
+<form id="f-agent">
+  <label>Nom de l’agent
+    <input name="nom" required maxlength="40" autocomplete="off">
+  </label>
+
+  <label>Mot de passe
+    <input name="mdp" type="password" required minlength="8" autocomplete="new-password">
+    <small>Au moins 8 caractères. L’agent se connecte avec son matricule et ce mot de passe.</small>
+  </label>
+
+  <label>Grade
+    <select name="grade" class="grades"></select>
+  </label>
+
+  <button class="btn sm">Ajouter l’agent</button>
+</form>
+<div id="liste"></div>
+   
           </div>
           <div class="panel" role="tabpanel" id="q2" aria-labelledby="e2" hidden>
             <h3>Promotion</h3>
