@@ -1015,19 +1015,46 @@ function setGrades(f) {
   f.querySelector('button').disabled = !list.length;
 }
 
+
 function render() {
-  $('#liste').innerHTML = agents.length ? [...agents].sort((x, y) => y.grade - x.grade || x.nom.localeCompare(y.nom)).map((a, i, arr) => (i && arr[i - 1].grade === a.grade ? '' : `<h4 class="gr">${GRADES[a.grade]} <span>(${arr.filter(b => b.grade === a.grade).length})</span></h4>`) + `
-    <details class="ag">
-      <summary><strong>${esc(a.nom)}</strong><span>${a.mat}</span></summary>
-      <ul>${a.hist.length ? a.hist.map(h => `<li>${h.date} — ${esc(h.txt)}</li>`).join('') : '<li>Aucun événement au dossier.</li>'}</ul>
-      ${auth && live ? `<form class="pw" data-id="${a.id}"><label>Mot de passe de l’agent<input type="password" minlength="4" required autocomplete="new-password"></label><button class="btn sm">${a.mdp ? 'Changer' : 'Définir'} le mot de passe</button></form><button type="button" class="lnk" data-del="${a.id}">Retirer l’agent</button>` : ''}
-    </details>`).join('') : '<p>Aucun agent pour le moment.</p>';
+  $('#liste').innerHTML = agents.length
+    ? [...agents]
+        .sort((x, y) => Number(y.grade) - Number(x.grade) ||
+          (x.name || '').localeCompare(y.name || ''))
+        .map((a, i, arr) => {
+          const gradeIndex = GRADES.indexOf(a.grade);
+          const gradeLabel = gradeIndex >= 0 ? a.grade : GRADES[Number(a.grade)] || a.grade;
+
+          return (i && arr[i - 1].grade === a.grade ? '' :
+            `<h4 class="gr">${esc(gradeLabel)}
+            <span>(${arr.filter(b => b.grade === a.grade).length})</span></h4>`) + `
+            <details class="ag">
+              <summary>
+                <strong>${esc(a.name)}</strong>
+                <span>${esc(a.matricule)}</span>
+              </summary>
+              <ul><li>${a.active ? 'Agent actif' : 'Compte désactivé'}</li></ul>
+              ${auth && live ? `
+                <button type="button" class="lnk" data-del="${a.id}">
+                  Retirer l’agent
+                </button>` : ''}
+            </details>`;
+        }).join('')
+    : '<p>Aucun agent pour le moment.</p>';
+
   document.querySelectorAll('.ags').forEach(s => {
     const v = s.value;
-    const list = ['f-paie', 'f-rap'].includes(s.form.id) && me ? agents.filter(a => a.id === me) : agents;
-    s.innerHTML = list.map(a => `<option value="${a.id}">${esc(a.nom)} (${GRADES[a.grade]})</option>`).join('');
+    const list = ['f-paie', 'f-rap'].includes(s.form.id) && me
+      ? agents.filter(a => a.id === me)
+      : agents;
+
+    s.innerHTML = list.map(a =>
+      `<option value="${a.id}">${esc(a.name)} (${esc(a.grade)})</option>`
+    ).join('');
+
     if (getAgent(v)) s.value = v;
   });
+
   document.querySelectorAll('form.dec').forEach(f => setGrades(f));
   autoPay();
 }
