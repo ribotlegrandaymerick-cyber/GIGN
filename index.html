@@ -621,30 +621,84 @@ function refresh() {
 
 $('#f-login').addEventListener('submit', async e => {
   e.preventDefault();
-  const f = e.target, msg = $('#login-msg');
+
+  const f = e.target;
+  const msg = $('#login-msg');
+
+  const identifier = f.ident.value.trim();
+  const password = f.mdp.value;
+
+  msg.textContent = 'Connexion en cours...';
+
   try {
-    if (norm(f.ident.value) === ID_OK && await sha(f.mdp.value.trim()) === PW_HASH) {
-      msg.textContent = '';
-      f.reset();
-      setAuth(true);
-      location.hash = 'espace';
-    } else {
-      const key = f.ident.value.trim().toLowerCase();
-      const found = agents.filter(a => a.mat.toLowerCase() === key || norm(a.nom) === norm(key));
-      const ag = found.length === 1 ? found[0] : null;
-      if (ag && ag.mdp && await sha(ag.mat + ':' + f.mdp.value) === ag.mdp) {
-        msg.textContent = '';
-        f.reset();
-        setMe(ag.id);
-        eshow(document.getElementById('e6'));
-        location.hash = 'espace';
-        return;
+    // Connexion via la fonction Supabase
+    const { data, error } = await gignDatabase.functions.invoke(
+      'gign-auth',
+      {
+        body: {
+          identifier,
+          password
+        }
       }
-      msg.textContent = norm(f.ident.value) === ID_OK || (loaded && db) ? 'Identifiant ou mot de passe incorrect.' : !loaded ? 'Données partagées en cours de chargement, réessayez dans un instant.' : 'Comptes agents indisponibles : ouvrez ce lien en étant connecté à Claude.';
-      f.mdp.value = '';
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.session || !data.user) {
+      throw new Error('Réponse de connexion invalide');
     }
+
+    // Enregistrement de la vraie session Supabase
+    const { error: sessionError } =
+      await gignDatabase.auth.setSession({
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token
+      });
+
+    if (sessionError) throw sessionError;
+
+    // Vérification du rôle dans la base de données
+    const { data: roleData, error: roleError } =
+      await gignDatabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', data.user.id)
+        .maybeSingle();
+
+    if (roleError) throw roleError;
+
+    if (roleData?.role === 'admin') {
+      setAuth(true);
+    } else if (roleData?.role === 'agent') {
+
+      const { data: agent, error: agentError } =
+        await gignDatabase
+          .from('agents')
+          .select('*')
+          .eq('user_id', data.user.id)
+          .maybeSingle();
+
+      if (agentError) throw agentError;
+
+      if (!agent || !agent.active) {
+        throw new Error('Compte agent introuvable ou désactivé');
+      }
+
+      setMe(agent.id);
+      eshow(document.getElementById('e6'));
+
+    } else {
+      throw new Error('Rôle non autorisé');
+    }
+
+    msg.textContent = '';
+    f.reset();
+    location.hash = 'espace';
+
   } catch (err) {
-    msg.textContent = 'Connexion indisponible sur ce navigateur.';
+    console.error('Erreur de connexion :', err);
+    msg.textContent = 'Identifiant ou mot de passe incorrect.';
+    f.mdp.value = '';
   }
 });
 document.querySelectorAll('.logout').forEach(b => b.addEventListener('click', () => setAuth(false)));
