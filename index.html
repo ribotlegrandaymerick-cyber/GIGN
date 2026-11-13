@@ -699,9 +699,15 @@ $('#f-login').addEventListener('submit', async e => {
     f.mdp.value = '';
   }
 });
-document.querySelectorAll('.logout').forEach(b => b.addEventListener('click', () => setAuth(false)));
-$('#nav-auth').addEventListener('click', e => { if (auth || me) { e.preventDefault(); setAuth(false); } });
-refresh();
+document.querySelectorAll('.logout').forEach(b =>
+  b.addEventListener('click', async () => {
+    await gignDatabase.auth.signOut();
+    auth = false;
+    me = null;
+    refresh();
+    location.hash = 'connexion';
+  })
+);
 
 /* Pages : le site, et la page de connexion (#connexion) */
 const TITLE = document.title;
