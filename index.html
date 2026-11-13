@@ -1018,11 +1018,29 @@ $('#plaintes').addEventListener('click', async e => {
 
 connectDb();
 
+
 function setGrades(f) {
   if (!f.grade) return;
-  const a = getAgent(f.agent.value), up = f.dataset.type === 'promotion';
-  const list = a ? gradeList().filter(([, i]) => up ? i > a.grade : i < a.grade) : [];
-  f.grade.innerHTML = list.length ? options(list) : '<option value="">Aucun grade disponible</option>';
+
+  const a = getAgent(f.agent.value);
+  const up = f.dataset.type === 'promotion';
+
+  const currentGrade = a
+    ? (typeof a.grade === 'number'
+        ? a.grade
+        : GRADES.indexOf(a.grade))
+    : -1;
+
+  const list = a
+    ? gradeList().filter(([, i]) =>
+        up ? i > currentGrade : i < currentGrade
+      )
+    : [];
+
+  f.grade.innerHTML = list.length
+    ? options(list)
+    : '<option value="">Aucun grade disponible</option>';
+
   f.querySelector('button').disabled = !list.length;
 }
 
