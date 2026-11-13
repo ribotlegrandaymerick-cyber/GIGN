@@ -465,7 +465,14 @@ form[inert]{opacity:.4}
 </div>
 
 <script>
-const nav = document.getElementById('nav');
+const SUPABASE_URL = 'https://wzblyplffgyjvvarxdql.supabase.co';
+const SUPABASE_KEY = 'TA_CLE_PUBLISHABLE';
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+  const nav = document.getElementById('nav');
 const burger = document.getElementById('burger');
 burger.addEventListener('click', () => {
   const open = nav.classList.toggle('open');
