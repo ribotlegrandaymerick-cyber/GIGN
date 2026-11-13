@@ -573,14 +573,12 @@ document.querySelectorAll('form.dec, #f-agent').forEach(f => f.insertAdjacentHTM
 function setAuth(v) {
   auth = v;
   me = null;
-  try { v ? sessionStorage.setItem('gign-auth', '1') : sessionStorage.removeItem('gign-auth'); sessionStorage.removeItem('gign-me'); } catch (err) {}
   refresh();
 }
 
 function setMe(id) {
   auth = false;
   me = id;
-  try { sessionStorage.removeItem('gign-auth'); sessionStorage.setItem('gign-me', id); } catch (err) {}
   refresh();
 }
 
