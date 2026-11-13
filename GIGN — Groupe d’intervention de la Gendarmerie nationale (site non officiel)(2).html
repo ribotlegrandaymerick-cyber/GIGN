@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GIGN — Groupe d’intervention de la Gendarmerie nationale (site non officiel)</title>
+<meta name="description" content="Présentation du GIGN : missions, histoire et recrutement. Site non officiel.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#050C1F;--night-2:#22407A;--night-ink:#FFFFFF;--night-muted:#CBD6EA;
+  --bg:#C9D7EE;--bg-a:#AFC3E8;--bg-b:#EEF3FB;--surface:#FFFFFF;--ink:#02081A;--muted:#1F2F4D;--line:#4F6894;
+  --accent:#A80C24;--blue:#0A2557;--focus:#0A2557;
+  --head:"Barlow Condensed","Arial Narrow","Helvetica Neue",Arial,sans-serif;
+  --body:"Barlow","Helvetica Neue",Arial,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){color-scheme:dark;--bg:#0B1633;--bg-a:#040A1A;--bg-b:#16336E;--surface:#17306A;--ink:#FFFFFF;--muted:#DCE5F5;--line:#8FA6D6;--accent:#FF8C99;--blue:#B9D0FF;--focus:#B9D0FF}
+}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0B1633;--bg-a:#040A1A;--bg-b:#16336E;--surface:#17306A;--ink:#FFFFFF;--muted:#DCE5F5;--line:#8FA6D6;--accent:#FF8C99;--blue:#B9D0FF;--focus:#B9D0FF}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 4.5rem)}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--bg) linear-gradient(170deg,var(--bg-a),var(--bg-b));color:var(--ink);font:400 1.0625rem/1.6 var(--body);overflow-x:clip}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--night);z-index:10}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.top :focus-visible,.hero :focus-visible,.join :focus-visible{outline-color:#fff}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--night);color:var(--night-ink);border-bottom:3px solid transparent;border-image:linear-gradient(90deg,#0A2557,#B50D29) 1}
+.top-in{max-width:90rem;margin:auto;padding:.85rem 1.25rem;display:flex;align-items:center;justify-content:space-between}
+.mark{font:700 1.9rem/1 var(--head);letter-spacing:.04em;color:inherit;text-decoration:none}
+.nav{display:flex;gap:.5rem}
+.nav a{color:var(--night-muted);text-decoration:none;font-weight:500;padding:.25rem .45rem;border-radius:2px;transition:background .15s,box-shadow .15s,color .15s}
+.nav a:hover{color:var(--night);background:#fff;box-shadow:0 0 16px rgba(255,255,255,.7)}
+.burger{display:none;background:none;border:1px solid var(--night-2);color:var(--night-ink);font:inherit;padding:.4rem .8rem;cursor:pointer}
+@media (max-width:1320px){
+  .burger{display:block}
+  .nav{display:none;position:absolute;left:0;right:0;top:100%;background:var(--night);flex-direction:column;gap:1rem;padding:1rem 1.25rem 1.5rem;border-top:1px solid var(--night-2)}
+  .nav.open{display:flex}
+}
+
+.tri{height:5px;background:linear-gradient(90deg,#1F4FA3 0 33.3%,#fff 0 66.6%,#C8102E 0);transform-origin:left}
+@media (prefers-reduced-motion:no-preference){.tri{animation:draw 1.1s cubic-bezier(.2,.7,.2,1) both}}
+@keyframes draw{from{transform:scaleX(0)}}
+
+.hero{background:linear-gradient(120deg,var(--night) 0%,#0A2557 45%,#B50D29 130%);color:var(--night-ink)}
+.hero-in{max-width:72rem;margin:auto;padding:clamp(3rem,9vw,7rem) 1.25rem clamp(3rem,7vw,5rem);display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:3rem;align-items:end}
+@media (max-width:800px){.hero-in{grid-template-columns:1fr}}
+h1{font:700 clamp(3.25rem,9vw,7.25rem)/.92 var(--head);letter-spacing:-.01em;margin:0 0 1.5rem;max-width:14ch}
+.lead{color:var(--night-muted);font-size:1.125rem;max-width:34rem;margin:0}
+.btn{display:inline-block;margin-top:1.75rem;padding:.85rem 1.4rem;background:linear-gradient(90deg,#0A2557,#B50D29,#0A2557);background-size:200% 100%;color:#fff;font-weight:600;text-decoration:none;border:2px solid #fff;box-shadow:0 4px 14px rgba(2,8,26,.35);transition:background-position .35s}
+.btn:hover{background-position:100% 0}
+.fiche{margin:0;border-top:1px solid rgba(255,255,255,.4)}
+.fiche div{display:flex;justify-content:space-between;gap:1rem;padding:.9rem 0;border-bottom:1px solid rgba(255,255,255,.4)}
+.fiche dt{color:var(--night-muted)}
+.fiche dd{margin:0;font-weight:600;text-align:right}
+
+.sec{padding:clamp(3rem,7vw,5.5rem) 1.25rem}
+.wrap{max-width:72rem;margin:auto}
+h2{font:700 clamp(2.25rem,5vw,3.5rem)/1 var(--head);margin:0 0 1rem}
+h2::after{content:"";display:block;width:3.5rem;height:5px;margin-top:.6rem;background:linear-gradient(90deg,var(--blue),var(--accent))}
+.join h2::after{background:linear-gradient(90deg,#fff,#FF8C99)}
+.intro{color:var(--muted);max-width:52ch;margin:0 0 2.25rem}
+
+.tabs{display:grid;grid-template-columns:16rem minmax(0,1fr);gap:2rem}
+.tablist{display:flex;flex-direction:column;border-left:1px solid var(--line);align-self:start}
+.tab{font:inherit;background:none;border:0;border-left:4px solid transparent;margin-left:-1px;padding:.9rem 1.1rem;text-align:left;color:var(--muted);cursor:pointer}
+.tab:hover,.tab[aria-selected="true"]:hover{color:var(--night);background:#fff;box-shadow:0 0 14px rgba(255,255,255,.9);transition:background .15s,box-shadow .15s,color .15s}
+.tab[aria-selected="true"]{color:var(--ink);font-weight:600;border-left-color:var(--accent);background:var(--surface);box-shadow:0 3px 10px rgba(2,8,26,.25)}
+.panel{background:var(--surface);border:2px solid var(--line);padding:2rem;box-shadow:0 8px 22px rgba(2,8,26,.3)}
+.panel h3{font:700 1.6rem/1.1 var(--head);margin:0 0 .6rem}
+.panel p{margin:0 0 1rem;max-width:60ch}
+.panel ul{margin:0;padding-left:1.2rem;color:var(--muted)}
+@media (max-width:760px){
+  .tabs{grid-template-columns:1fr;gap:1.25rem}
+  .tablist{flex-direction:row;flex-wrap:wrap;border-left:0;border-bottom:1px solid var(--line)}
+  .tab{white-space:nowrap;border-left:0;margin:0;padding:.5rem .75rem;font-size:.95rem;border-bottom:4px solid transparent}
+  .tab[aria-selected="true"]{border-bottom-color:var(--accent)}
+  .panel{padding:1rem}
+}
+
+.tl{list-style:none;margin:2rem 0 0;padding:0;border-left:4px solid var(--blue)}
+.tl li{position:relative;padding:0 0 2.25rem 1.75rem}
+.tl li::before{content:"";position:absolute;left:-8px;top:.6rem;width:12px;height:12px;border-radius:50%;background:var(--accent)}
+.tl time{display:block;font:700 1.7rem/1.2 var(--head)}
+.tl p{margin:.25rem 0 0;max-width:58ch;color:var(--muted)}
+
+.join{background:linear-gradient(135deg,#B50D29 -30%,#0A2557 55%,var(--night) 100%);color:var(--night-ink)}
+.join p{color:var(--night-ink);max-width:52ch;margin:0 0 1rem}
+footer{background:linear-gradient(90deg,var(--night),#0A2557);color:var(--night-muted);border-top:3px solid transparent;border-image:linear-gradient(90deg,#0A2557,#B50D29) 1;padding:2rem 1.25rem;font-size:.95rem}
+footer p{margin:0 0 .5rem;max-width:70ch}
+footer strong{color:var(--night-ink)}
+
+.panel form{display:grid;gap:1rem;max-width:34rem;margin:1.25rem 0}
+.panel label{display:grid;gap:.3rem;font-weight:500}
+.panel input,.panel select,.panel textarea{font:inherit;font-weight:400;color:var(--ink);background:var(--bg);border:2px solid var(--line);padding:.6rem .7rem;width:100%}
+.btn.sm{margin:0;border:0;font:inherit;font-weight:600;cursor:pointer;justify-self:start}
+.btn.sm:disabled{opacity:.45;cursor:not-allowed}
+.lnk{background:none;border:0;padding:0;margin-top:1rem;font:inherit;color:var(--muted);text-decoration:underline;cursor:pointer}
+.ag{border-top:1px solid var(--line);padding:.75rem 0}
+.ag summary{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.25rem 1rem;cursor:pointer}
+.ag ul{margin:.6rem 0}
+.out{margin-top:1.25rem}
+.acte{max-width:34rem;padding:1.25rem;background:var(--bg);border:2px solid var(--line);border-top:6px solid var(--blue);box-shadow:0 4px 12px rgba(2,8,26,.2)}
+.acte h4{font:700 1.5rem/1.1 var(--head);margin:0 0 .6rem}
+.acte p{margin:.3rem 0;color:var(--muted)}
+.acte strong{color:var(--ink)}
+.acte table{width:100%;border-collapse:collapse;margin:.75rem 0}
+.acte td,.acte th{padding:.45rem 0;border-bottom:1px solid var(--line);text-align:left}
+.acte td:last-child,.acte th:last-child{text-align:right}
+.acte .fictif{color:var(--accent);font-weight:600}
+
+.login{max-width:34rem;margin-bottom:2rem}
+.login p{margin:0 0 .5rem}
+.msg{color:var(--accent);font-weight:600;min-height:1.5em}
+.gate{padding:.65rem .9rem;background:var(--bg);border-left:4px solid var(--accent)}
+.gate a{color:inherit}
+form[inert]{opacity:.4}
+
+.statut{margin:0 0 1.5rem;padding:.65rem .9rem;background:var(--surface);border-left:4px solid var(--blue)}
+.statut .lnk{margin:0 0 0 .5rem}
+.panel small{font-weight:400;color:var(--muted)}
+.panel .pw{margin:.75rem 0;gap:.6rem}
+.sync{margin:0 0 1.25rem;color:var(--muted);font-size:.95rem}
+.rap{border-top:1px solid var(--line);padding:1rem 0}
+.rap h4{font:700 1.35rem/1.2 var(--head);margin:0 0 .25rem}
+.rap p{margin:.25rem 0;max-width:62ch}
+.rap .meta{color:var(--muted);font-size:.95rem}
+.rap .txt{white-space:pre-line}
+.gr{font:700 1.4rem/1.2 var(--head);margin:1.5rem 0 .25rem}
+.gr span{font-weight:400;color:var(--muted)}
+.ag .txt{white-space:pre-line}
+.ag .meta{color:var(--muted);font-size:.95rem}
+.srch{margin:1.25rem 0 .5rem;max-width:34rem}
+[data-role]:not([data-role="admin"]) #f-cas{display:none}
+[data-role="visiteur"] #site main>section:not(#plainte){display:none}
+[data-role="visiteur"] .nav a:not([href="#plainte"]):not(#nav-auth){display:none}
+#plainte .panel{max-width:44rem}
+:is([data-role="agent"],[data-role="admin"]) :is(#plainte,.nav a[href="#plainte"]){display:none}
+.acte.doc{max-width:none;margin:.6rem 0;padding:.9rem 1rem;font-size:.95rem}
+.acte.doc h4{font-size:1.25rem;margin-bottom:.3rem}
+.acte.doc .fictif{font-size:.8rem}
+.acte h5{font:700 1rem/1.2 var(--head);margin:.7rem 0 .15rem;color:var(--ink)}
+.acte .txt{white-space:pre-line;overflow-wrap:anywhere}
+.acte .det{display:grid;grid-template-columns:repeat(auto-fit,minmax(7.5rem,1fr));gap:.4rem .75rem;margin:.6rem 0;max-width:48rem}
+.acte .det div{min-width:0;padding-bottom:.3rem;border-bottom:1px solid var(--line)}
+.acte .det dt{font-size:.8rem;color:var(--muted)}
+.acte .det dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+
+.panel :is(#f-rap,#f-cas,#f-pl){max-width:100%;gap:.6rem .8rem;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr))}
+.panel :is(#f-rap,#f-cas,#f-pl) label{gap:.2rem;font-size:.85rem;min-width:0}
+.panel :is(#f-rap,#f-cas,#f-pl) :is(input,select,textarea){padding:.4rem .55rem;font-size:1rem;min-width:0;max-width:100%}
+:is(#f-rap,#f-cas,#f-pl) :is(.full,button){grid-column:1/-1}
+[data-role="agent"] #f-paie button,[data-role="agent"] #f-paie label:first-child{display:none}
+[data-role="agent"] :is(#e2,#e3,#e4,.nav [data-tab="e2"],.nav [data-tab="e3"],.nav [data-tab="e4"]){display:none}
+#page-login{position:relative;--ink:#000;--muted:#000;--surface:#fff;--bg:#fff;--line:#0A2557;--accent:#A80C24;--blue:#0A2557;--focus:#0A2557;background:linear-gradient(160deg,#BFD0F5 0%,#FFFFFF 50%,#F7C5CD 100%);color:#000;min-height:calc(100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));min-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+#page-login .tri{position:absolute;inset:0 0 auto}
+.lp{min-height:inherit;display:grid;align-content:center;justify-items:center;gap:1.5rem;padding:3rem 1.25rem}
+.lp .mark{font-size:2.5rem}
+.lp>a:focus-visible{outline-color:#0A2557}
+.lp a.back{color:#000}
+#page-login .msg{color:#000}
+#login-msg:not(:empty){border-left:4px solid #A80C24;padding-left:.6rem}
+#page-login .btn{background:linear-gradient(90deg,#BFD0F5,#F7C5CD,#BFD0F5);background-size:200% 100%;color:#000;border:2px solid #000}
+#page-login .btn:hover{background-position:100% 0}
+.lp-card{width:100%;max-width:26rem}
+.lp-card h1{font:700 2.5rem/1 var(--head);letter-spacing:0;max-width:none;margin:0 0 .75rem}
+.nav #nav-auth{border:1px solid var(--night-muted);padding:.3rem .9rem;color:var(--night-ink)}
+.nav #nav-auth:hover{color:var(--night);border-color:#fff}
+</style>
+</head>
+<body>
+
+<div id="site" hidden>
+<header class="top">
+  <div class="top-in">
+    <a class="mark" href="#accueil">GIGN</a>
+    <button class="burger" id="burger" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Navigation principale">
+      <a href="#missions">Missions</a>
+      <a href="#histoire">Histoire</a>
+      <a href="#espace" data-tab="e1">Agents</a>
+      <a href="#espace" data-tab="e2">Promotion</a>
+      <a href="#espace" data-tab="e3">Derank</a>
+      <a href="#espace" data-tab="e4">Blâme</a>
+      <a href="#espace" data-tab="e5">Fiche de paie</a>
+      <a href="#espace" data-tab="e6">Rapports</a>
+      <a href="#espace" data-tab="e7">Casiers</a>
+      <a href="#connexion" id="nav-auth">Connexion</a>
+      <a href="#recrutement">Recrutement</a>
+      <a href="#plainte">Porter plainte</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="accueil">
+    <div class="tri"></div>
+    <div class="hero-in">
+      <div>
+        <h1>Sauver des vies au péril de la sienne</h1>
+        <p class="lead">Le Groupe d’intervention de la Gendarmerie nationale est l’unité d’élite française chargée des crises les plus graves&nbsp;: prises d’otages, terrorisme, forcenés.</p>
+        <a class="btn" href="#missions">Découvrir les missions</a>
+      </div>
+      <dl class="fiche">
+        <div><dt>Création</dt><dd>1er mars 1974</dd></div>
+        <div><dt>Base</dt><dd>Satory, Versailles</dd></div>
+        <div><dt>Rattachement</dt><dd>Gendarmerie nationale</dd></div>
+        <div><dt>Spécialités</dt><dd>Intervention, observation, protection</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="sec" id="missions">
+    <div class="wrap">
+      <h2>Ce que fait le GIGN</h2>
+      <p class="intro">Le groupe agit en France comme à l’étranger, à la demande des autorités. Choisissez une mission pour en savoir plus.</p>
+      <div class="tabs">
+        <div class="tablist" role="tablist" aria-label="Missions du GIGN">
+          <button class="tab" role="tab" id="t1" aria-controls="p1" aria-selected="true">Intervention</button>
+          <button class="tab" role="tab" id="t2" aria-controls="p2" aria-selected="false" tabindex="-1">Observation et recherche</button>
+          <button class="tab" role="tab" id="t3" aria-controls="p3" aria-selected="false" tabindex="-1">Protection</button>
+          <button class="tab" role="tab" id="t4" aria-controls="p4" aria-selected="false" tabindex="-1">Formation et coopération</button>
+        </div>
+        <div>
+          <div class="panel" role="tabpanel" id="p1" aria-labelledby="t1">
+            <h3>Intervenir en situation de crise</h3>
+            <p>Libérer des otages, neutraliser un forcené, répondre à une attaque terroriste ou interpeller des individus très dangereux&nbsp;: c’est le cœur de métier du groupe.</p>
+            <ul><li>Prises d’otages</li><li>Forcenés et individus retranchés</li><li>Lutte contre le terrorisme</li></ul>
+          </div>
+          <div class="panel" role="tabpanel" id="p2" aria-labelledby="t2" hidden>
+            <h3>Voir sans être vu</h3>
+            <p>Les équipes recueillent du renseignement opérationnel, surveillent et suivent des cibles pour préparer une intervention ou appuyer une enquête.</p>
+            <ul><li>Surveillance et filature</li><li>Renseignement avant l’assaut</li><li>Appui aux enquêtes judiciaires</li></ul>
+          </div>
+          <div class="panel" role="tabpanel" id="p3" aria-labelledby="t3" hidden>
+            <h3>Protéger des personnes et des sites</h3>
+            <p>Le groupe assure la protection de personnalités exposées et de sites sensibles, en France et à l’étranger.</p>
+            <ul><li>Hautes personnalités</li><li>Représentations françaises à l’étranger</li><li>Sites sensibles</li></ul>
+          </div>
+          <div class="panel" role="tabpanel" id="p4" aria-labelledby="t4" hidden>
+            <h3>Transmettre et coopérer</h3>
+            <p>Le GIGN forme des gendarmes et travaille avec des unités d’intervention d’autres pays pour échanger ses méthodes et son expérience.</p>
+            <ul><li>Formation de gendarmes</li><li>Partenariats internationaux</li><li>Retours d’expérience</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="histoire" style="padding-top:0">
+    <div class="wrap">
+      <h2>Plus de cinquante ans d’histoire</h2>
+      <ol class="tl">
+        <li><time datetime="1974-03-01">1er mars 1974</time><p>Sous l’impulsion de Christian Prouteau, la Gendarmerie se dote d’une unité d’élite après l’attentat des Jeux olympiques de Munich, en 1972.</p></li>
+        <li><time datetime="1994-12-26">26 décembre 1994</time><p>À Marignane, le GIGN donne l’assaut sur l’Airbus d’Air France détourné et libère les otages.</p></li>
+        <li><time datetime="2007">2007</time><p>Le GIGN, l’EPIGN et les antennes GIGN sont regroupés au sein de la Force d’intervention de la Gendarmerie nationale.</p></li>
+        <li><time datetime="2015-01-09">9 janvier 2015</time><p>À Dammartin-en-Goële, le GIGN intervient contre les auteurs de l’attentat contre Charlie Hebdo, retranchés dans une imprimerie.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" id="espace" style="padding-top:0">
+    <div class="wrap">
+      <h2>Espace agents</h2>
+      <p class="intro">Les agents rédigent leurs rapports d’intervention et consultent leur fiche de paie. La gestion du personnel est réservée au compte haut gradé. Les données sont fictives et partagées en temps réel entre toutes les personnes qui ouvrent ce lien.</p>
+      <p class="sync" id="sync" role="status">Connexion à la base de données…</p>
+      <p class="statut" id="statut" hidden><span id="statut-txt"></span> <button type="button" class="lnk logout">Se déconnecter</button></p>
+      <div class="tabs">
+        <div class="tablist" role="tablist" aria-label="Espace agents">
+          <button class="tab" role="tab" id="e1" aria-controls="q1" aria-selected="true">Agents</button>
+          <button class="tab" role="tab" id="e2" aria-controls="q2" aria-selected="false" tabindex="-1">Promotion</button>
+          <button class="tab" role="tab" id="e3" aria-controls="q3" aria-selected="false" tabindex="-1">Derank</button>
+          <button class="tab" role="tab" id="e4" aria-controls="q4" aria-selected="false" tabindex="-1">Blâme</button>
+          <button class="tab" role="tab" id="e5" aria-controls="q5" aria-selected="false" tabindex="-1">Fiche de paie</button>
+          <button class="tab" role="tab" id="e6" aria-controls="q6" aria-selected="false" tabindex="-1">Rapports</button>
+          <button class="tab" role="tab" id="e7" aria-controls="q7" aria-selected="false" tabindex="-1">Casiers</button>
+          <button class="tab" role="tab" id="e8" aria-controls="q8" aria-selected="false" tabindex="-1">Plaintes</button>
+        </div>
+        <div>
+          <div class="panel" role="tabpanel" id="q1" aria-labelledby="e1">
+            <h3>Agents du GIGN</h3>
+            <form id="f-agent">
+              <label>Nom de l’agent<input name="nom" required maxlength="40" autocomplete="off"></label>
+              <label>Mot de passe<input name="mdp" type="password" required minlength="4" autocomplete="new-password"><small>Au moins 4 caractères. L’agent se connecte avec son matricule et ce mot de passe.</small></label>
+              <label>Grade<select name="grade" class="grades"></select></label>
+              <button class="btn sm">Ajouter l’agent</button>
+            </form>
+            <div id="liste"></div>
+            
+          </div>
+          <div class="panel" role="tabpanel" id="q2" aria-labelledby="e2" hidden>
+            <h3>Promotion</h3>
+            <form class="dec" data-type="promotion">
+              <label>Agent<select name="agent" class="ags" required></select></label>
+              <label>Nouveau grade<select name="grade"></select></label>
+              <label>Motif<textarea name="motif" required maxlength="200" rows="3"></textarea></label>
+              <button class="btn sm">Valider la promotion</button>
+            </form>
+            <div class="out" role="status"></div>
+          </div>
+          <div class="panel" role="tabpanel" id="q3" aria-labelledby="e3" hidden>
+            <h3>Derank</h3>
+            <form class="dec" data-type="derank">
+              <label>Agent<select name="agent" class="ags" required></select></label>
+              <label>Nouveau grade<select name="grade"></select></label>
+              <label>Motif<textarea name="motif" required maxlength="200" rows="3"></textarea></label>
+              <button class="btn sm">Valider la rétrogradation</button>
+            </form>
+            <div class="out" role="status"></div>
+          </div>
+          <div class="panel" role="tabpanel" id="q4" aria-labelledby="e4" hidden>
+            <h3>Blâme</h3>
+            <form class="dec" data-type="blame">
+              <label>Agent<select name="agent" class="ags" required></select></label>
+              <label>Sanction<select name="sanction"><option>Avertissement</option><option>Réprimande</option><option selected>Blâme</option></select></label>
+              <label>Motif<textarea name="motif" required maxlength="200" rows="3"></textarea></label>
+              <button class="btn sm">Prononcer la sanction</button>
+            </form>
+            <div class="out" role="status"></div>
+          </div>
+          <div class="panel" role="tabpanel" id="q8" aria-labelledby="e8" hidden>
+            <h3>Plaintes reçues</h3>
+            <p>Plaintes déposées par les invités, consultables par les agents et le compte haut gradé.</p>
+            <p class="gate" id="gate-plr">Réservé aux agents. <a href="#connexion">Se connecter</a></p>
+            <div id="plaintes"></div>
+          </div>
+          <div class="panel" role="tabpanel" id="q7" aria-labelledby="e7" hidden>
+            <h3>Casiers judiciaires</h3>
+            <p>Fichier des criminels, consultable par tous les agents. Données fictives : n’y saisissez le nom d’aucune personne réelle.</p>
+            <p class="gate" id="gate-cas">Réservé aux agents. <a href="#connexion">Se connecter</a></p>
+            <form id="f-cas">
+              <label>Nom complet<input name="nom" required maxlength="60" autocomplete="off"></label>
+              <label>Alias<input name="alias" maxlength="40" autocomplete="off"></label>
+              <label>Âge<input type="number" name="age" min="14" max="99" value="30" required></label>
+              <label>Taille (cm)<input type="number" name="taille" min="100" max="230" value="175" required></label>
+              <label>Corpulence<select name="corpulence"><option>Mince</option><option selected>Moyenne</option><option>Athlétique</option><option>Corpulente</option></select></label>
+              <label>Signes distinctifs<input name="signes" maxlength="80" autocomplete="off"></label>
+              <label>Dernier lieu connu<input name="lieu" maxlength="80" autocomplete="off"></label>
+              <label>Organisation ou réseau<input name="orga" maxlength="60" autocomplete="off"></label>
+              <label>Dangerosité<select name="danger"><option value="0">Faible</option><option value="1">Moyenne</option><option value="2" selected>Élevée</option><option value="3">Extrême</option></select></label>
+              <label>Statut<select name="statut"><option>En liberté</option><option>Recherché</option><option>Incarcéré</option></select></label>
+              <label>Mandat en cours<select name="mandat"><option>Aucun</option><option>Mandat de recherche</option><option>Mandat d’amener</option><option>Mandat d’arrêt</option></select></label>
+              <label>Armement connu<select name="armement"><option>Non armé</option><option>Armes blanches</option><option>Armes à feu</option><option>Fortement armé</option></select></label>
+              <label>Condamnations<input type="number" name="condamnations" min="0" max="99" value="0" required></label>
+              <label class="full">Faits et condamnations<textarea name="faits" required maxlength="1000" rows="4"></textarea></label>
+              <label class="full">Observations<textarea name="notes" maxlength="600" rows="3"></textarea></label>
+              <button class="btn sm">Ajouter au fichier</button>
+            </form>
+            <div id="cas-box">
+              <label class="srch">Rechercher<input id="q-cas" type="search" placeholder="Nom ou alias" autocomplete="off"></label>
+              <div id="casiers"></div>
+            </div>
+          </div>
+          <div class="panel" role="tabpanel" id="q6" aria-labelledby="e6" hidden>
+            <h3>Rapports d’intervention</h3>
+            <p>Un rapport n’est visible que par son auteur et par le compte haut gradé.</p>
+            <p class="gate" id="gate-rap">Connectez-vous pour rédiger et consulter les rapports. <a href="#connexion">Se connecter</a></p>
+            <form id="f-rap">
+              <label>Agent<select name="agent" class="ags" required></select></label>
+              <label>Date et heure<input type="datetime-local" name="quand" required></label>
+              <label>Type d’intervention<select name="type"><option>Prise d’otages</option><option>Forcené</option><option>Interpellation à haut risque</option><option>Lutte antiterroriste</option><option>Protection de personnalité</option><option>Observation et surveillance</option><option>Perquisition sensible</option><option>Opération maritime</option><option>Autre</option></select></label>
+              <label>Niveau d’alerte<select name="alerte"><option>Normal</option><option>Élevé</option><option>Critique</option></select></label>
+              <label>Lieu<input name="lieu" required maxlength="80" autocomplete="off"></label>
+              <label>Effectifs engagés<input type="number" name="effectifs" min="1" max="100" value="4" required></label>
+              <label>Unités en appui<select name="appui"><option>Aucune</option><option>Police nationale</option><option>Sapeurs-pompiers</option><option>SAMU</option><option>Armée</option><option>Plusieurs unités</option></select></label>
+              <label>Durée (minutes)<input type="number" name="duree" min="1" max="2880" value="30" required></label>
+              <label>Suspects interpellés<input type="number" name="suspects" min="0" max="100" value="0" required></label>
+              <label>Victimes ou otages<input type="number" name="victimes" min="0" max="500" value="0" required></label>
+              <label>Blessés<input type="number" name="blesses" min="0" max="500" value="0" required></label>
+              <label>Armes saisies<select name="armes"><option>Aucune</option><option>Armes blanches</option><option>Armes de poing</option><option>Armes d’épaule</option><option>Plusieurs types</option></select></label>
+              <label>Résultat<select name="resultat"><option>Réussie</option><option>Réussie avec pertes</option><option>Partielle</option><option>Échec</option><option>Annulée</option></select></label>
+              <label class="full">Compte rendu<textarea name="texte" required maxlength="1500" rows="5"></textarea></label>
+              <label class="full">Observations et suites à donner<textarea name="suites" maxlength="800" rows="3"></textarea></label>
+              <button class="btn sm">Enregistrer le rapport</button>
+            </form>
+            <div id="rapports"></div>
+          </div>
+          <div class="panel" role="tabpanel" id="q5" aria-labelledby="e5" hidden>
+            <h3>Fiche de paie</h3>
+            <p class="gate" id="gate-paie">Connectez-vous pour consulter une fiche de paie. <a href="#connexion">Se connecter</a></p>
+            <form id="f-paie">
+              <label>Agent<select name="agent" class="ags" required></select></label>
+              <label>Mois<input type="month" name="mois" required></label>
+              <small>Les primes d’intervention sont calculées d’après les rapports rédigés dans le mois.</small>
+              <button class="btn sm">Générer la fiche de paie</button>
+            </form>
+            <div class="out" id="paie" role="status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec join" id="recrutement">
+    <div class="wrap">
+      <h2>Rejoindre le groupe</h2>
+      <p>Le GIGN recrute parmi les gendarmes. L’accès passe par une sélection exigeante, puis par une longue formation&nbsp;: condition physique, solidité mentale, maîtrise technique et sang-froid sont évalués.</p>
+      <p>Les conditions et le calendrier sont publiés par la Gendarmerie nationale.</p>
+      <a class="btn" href="https://www.gendarmerie.interieur.gouv.fr" target="_blank" rel="noopener noreferrer">Consulter le site officiel</a>
+    </div>
+  </section>
+  <section class="sec" id="plainte">
+    <div class="wrap">
+      <h2>Porter plainte</h2>
+      <p class="intro">Décrivez les faits : votre plainte est transmise aux agents du GIGN. Ce site est fictif : pour une vraie plainte, adressez-vous à un commissariat ou à une brigade de gendarmerie, et appelez le 17 en cas d’urgence.</p>
+      <div class="panel">
+        <p class="gate" id="gate-pl" hidden>Dépôt indisponible : votre accès aux données partagées est en lecture seule, ou la base est injoignable. Demandez au propriétaire le droit « Contributeur ».</p>
+        <form id="f-pl">
+          <label>Nom du plaignant<input name="nom" required maxlength="60" autocomplete="off"></label>
+          <label>Contact (facultatif)<input name="contact" maxlength="80" autocomplete="off"></label>
+          <label>Type de plainte<select name="type"><option>Vol</option><option>Agression</option><option>Menace</option><option>Dégradation</option><option>Escroquerie</option><option>Disparition</option><option>Autre</option></select></label>
+          <label>Date des faits<input type="date" name="quand" required></label>
+          <label class="full">Lieu des faits<input name="lieu" required maxlength="100" autocomplete="off"></label>
+          <label class="full">Description des faits<textarea name="faits" required maxlength="1500" rows="5"></textarea></label>
+          <label class="full">Suspect(s) éventuel(s)<input name="suspect" maxlength="150" autocomplete="off"></label>
+          <label class="full">Témoin(s)<input name="temoins" maxlength="150" autocomplete="off"></label>
+          <button class="btn sm">Déposer la plainte</button>
+        </form>
+        <p class="msg" id="pl-msg" role="status"></p>
+        <div id="pl-recu"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><strong>Urgence&nbsp;:</strong> appelez le 17 ou le 112. Le GIGN n’est pas joignable directement&nbsp;; il intervient sur décision des autorités.</p>
+    <p>Site non officiel réalisé à titre de démonstration, sans lien avec la Gendarmerie nationale. © <span id="year">2026</span></p>
+  </div>
+</footer>
+</div>
+
+<div id="page-login">
+  <div class="tri"></div>
+  <div class="lp">
+    <a class="mark" href="#">GIGN</a>
+    <div class="panel login lp-card">
+      <div id="box-out">
+        <h1>Connexion</h1>
+        <p>Connectez-vous avec le compte haut gradé ou avec le matricule d’un agent (par exemple GIGN-0004). Un agent y rédige ses rapports d’intervention et consulte sa fiche de paie. Seul le compte haut gradé peut ajouter des agents, promouvoir, rétrograder ou sanctionner. En mode invité, seul le dépôt de plainte est accessible.</p>
+        <form id="f-login">
+          <label>Identifiant<input name="ident" required autocomplete="username"></label>
+          <label>Mot de passe<input name="mdp" type="password" required autocomplete="current-password"></label>
+          <button class="btn sm">Se connecter</button>
+        </form>
+        <p class="msg" id="login-msg" role="alert"></p>
+      </div>
+      <div id="box-in" hidden>
+        <h1>Déjà connecté</h1>
+        <p id="who"></p>
+        <a class="btn sm" href="#espace">Ouvrir l’espace agents</a>
+        <button type="button" class="lnk logout">Se déconnecter</button>
+      </div>
+    </div>
+    <a class="back" id="skip" href="#accueil">Continuer sans se connecter</a>
+  </div>
+</div>
+
+<script>
+const nav = document.getElementById('nav');
+const burger = document.getElementById('burger');
+burger.addEventListener('click', () => {
+  const open = nav.classList.toggle('open');
+  burger.setAttribute('aria-expanded', open);
+});
+nav.addEventListener('click', e => {
+  if (e.target.tagName === 'A') {
+    nav.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }
+});
+
+const tabs = [...document.querySelectorAll('#missions .tab')];
+function show(tab) {
+  tabs.forEach(b => {
+    const on = b === tab;
+    b.setAttribute('aria-selected', on);
+    b.tabIndex = on ? 0 : -1;
+    document.getElementById(b.getAttribute('aria-controls')).hidden = !on;
+  });
+  tab.focus();
+}
+tabs.forEach((tab, i) => {
+  tab.addEventListener('click', () => show(tab));
+  tab.addEventListener('keydown', e => {
+    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (step) {
+      e.preventDefault();
+      show(tabs[(i + step + tabs.length) % tabs.length]);
+    }
+  });
+});
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* Onglets de l’espace agents */
+const etabs = [...document.querySelectorAll('#espace .tab')];
+function eshow(tab) {
+  etabs.forEach(b => {
+    const on = b === tab;
+    b.setAttribute('aria-selected', on);
+    b.tabIndex = on ? 0 : -1;
+    document.getElementById(b.getAttribute('aria-controls')).hidden = !on;
+  });
+}
+etabs.forEach((tab, i) => {
+  tab.addEventListener('click', () => eshow(tab));
+  tab.addEventListener('keydown', e => {
+    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (step) {
+      e.preventDefault();
+      const vis = etabs.filter(t => t.offsetParent !== null);
+      const next = vis[(vis.indexOf(tab) + step + vis.length) % vis.length];
+      eshow(next);
+      next.focus();
+    }
+  });
+});
+document.querySelectorAll('[data-tab]').forEach(a => a.addEventListener('click', () => eshow(document.getElementById(a.dataset.tab))));
+
+/* Données des agents */
+const GRADES = ['Gendarme', 'Maréchal des logis-chef', 'Adjudant', 'Adjudant-chef', 'Major', 'Sous-lieutenant', 'Lieutenant', 'Capitaine', 'Commandant', 'Lieutenant-colonel', 'Colonel'];
+const SOLDE = [2100, 2400, 2700, 3000, 3300, 3500, 3800, 4300, 4900, 5600, 6500];
+let agents = [], rapports = [], casiers = [], plaintes = [], db = null, live = false, loaded = false, shadow = new Map();
+const DANGER = ['Faible', 'Moyenne', 'Élevée', 'Extrême'];
+const sig = v => v && typeof v === 'object' ? (Array.isArray(v) ? '[' + v.map(sig) + ']' : '{' + Object.keys(v).sort().map(k => k + ':' + sig(v[k])) + '}') : JSON.stringify(v);
+const setSync = t => { $('#sync').textContent = t; };
+async function save() {
+  if (!db || !live) return;
+  const now = new Map(agents.map(a => [String(a.id), a]));
+  try {
+    for (const [id, a] of now) {
+      if (shadow.get(id) !== sig(a)) { shadow.set(id, sig(a)); await db.collection('agents').doc(id).set(a); }
+    }
+    for (const id of [...shadow.keys()]) {
+      if (!now.has(id)) { shadow.delete(id); await db.collection('agents').doc(id).delete(); }
+    }
+  } catch (err) { setSync('Écriture refusée : vous n’avez pas le droit de modifier les données partagées.'); }
+}
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const getAgent = id => agents.find(a => a.id == id);
+const today = () => new Date().toLocaleDateString('fr-FR');
+const gradeList = () => GRADES.map((g, i) => [g, i]);
+const options = list => list.map(([g, i]) => `<option value="${i}">${g}</option>`).join('');
+
+/* Connexion (protection côté navigateur) */
+const ID_OK = 'hautgrade';
+const PW_HASH = '4c726c480ac8e86721150bf72d24750504e3ac20ddece3923b387901724a41f0';
+let auth = false;
+try { auth = sessionStorage.getItem('gign-auth') === '1'; } catch (err) {}
+let me = null;
+try { me = +sessionStorage.getItem('gign-me') || null; } catch (err) {}
+const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z]/g, '');
+const sha = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(x => x.toString(16).padStart(2, '0')).join('');
+document.querySelectorAll('form.dec, #f-agent').forEach(f => f.insertAdjacentHTML('beforebegin', '<p class="gate" role="note">Action réservée au compte haut gradé. <a href="#connexion">Se connecter</a></p>'));
+
+function setAuth(v) {
+  auth = v;
+  me = null;
+  try { v ? sessionStorage.setItem('gign-auth', '1') : sessionStorage.removeItem('gign-auth'); sessionStorage.removeItem('gign-me'); } catch (err) {}
+  refresh();
+}
+
+function setMe(id) {
+  auth = false;
+  me = id;
+  try { sessionStorage.removeItem('gign-auth'); sessionStorage.setItem('gign-me', id); } catch (err) {}
+  refresh();
+}
+
+function refresh() {
+  const ag = me && getAgent(me);
+  if (!ag && loaded) me = null;
+  const v = auth || !!ag;
+  document.documentElement.dataset.role = auth ? 'admin' : ag ? 'agent' : 'visiteur';
+  $('.top .mark').setAttribute('href', v ? '#accueil' : '#plainte');
+  $('#box-out').hidden = v;
+  $('#box-in').hidden = !v;
+  $('#statut').hidden = !v;
+  $('#statut-txt').textContent = auth ? 'Connecté avec le compte haut gradé : la gestion des agents est déverrouillée.' : ag ? `Connecté en tant que ${ag.nom} (${ag.mat}) : rapports d’intervention et fiche de paie personnelle.` : '';
+  $('#who').textContent = auth ? 'Vous êtes connecté avec le compte haut gradé.' : ag ? `Vous êtes connecté en tant que ${ag.nom} (${ag.mat}).` : '';
+  $('#skip').textContent = v ? 'Accéder au site' : 'Continuer en invité (porter plainte)';
+  $('#skip').setAttribute('href', v ? '#accueil' : '#plainte');
+  $('#nav-auth').textContent = v ? 'Déconnexion' : 'Connexion';
+  const rw = auth && live;
+  document.querySelectorAll('.gate').forEach(g => { g.hidden = auth; });
+  document.querySelectorAll('form.dec, #f-agent').forEach(f => { f.inert = !rw; });
+  $('#f-paie').inert = !v;
+  $('#gate-paie').hidden = v;
+  $('#gate-rap').hidden = v && (live || !loaded);
+  $('#gate-rap').innerHTML = v ? 'Votre accès est en lecture seule : demandez au propriétaire le droit « Contributeur » pour rédiger un rapport.' : 'Connectez-vous pour rédiger et consulter les rapports. <a href="#connexion">Se connecter</a>';
+  $('#f-rap').inert = !(v && live);
+  $('#gate-cas').hidden = v;
+  $('#cas-box').hidden = !v;
+  $('#f-cas').inert = !rw;
+  $('#gate-pl').hidden = live || !loaded;
+  $('#f-pl').inert = !live;
+  $('#gate-plr').hidden = v;
+  renderPl();
+  renderCas();
+  document.querySelectorAll('.out').forEach(o => { o.textContent = ''; });
+  renderRap();
+  render();
+}
+
+$('#f-login').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, msg = $('#login-msg');
+  try {
+    if (norm(f.ident.value) === ID_OK && await sha(f.mdp.value.trim()) === PW_HASH) {
+      msg.textContent = '';
+      f.reset();
+      setAuth(true);
+      location.hash = 'espace';
+    } else {
+      const key = f.ident.value.trim().toLowerCase();
+      const found = agents.filter(a => a.mat.toLowerCase() === key || norm(a.nom) === norm(key));
+      const ag = found.length === 1 ? found[0] : null;
+      if (ag && ag.mdp && await sha(ag.mat + ':' + f.mdp.value) === ag.mdp) {
+        msg.textContent = '';
+        f.reset();
+        setMe(ag.id);
+        eshow(document.getElementById('e6'));
+        location.hash = 'espace';
+        return;
+      }
+      msg.textContent = norm(f.ident.value) === ID_OK || (loaded && db) ? 'Identifiant ou mot de passe incorrect.' : !loaded ? 'Données partagées en cours de chargement, réessayez dans un instant.' : 'Comptes agents indisponibles : ouvrez ce lien en étant connecté à Claude.';
+      f.mdp.value = '';
+    }
+  } catch (err) {
+    msg.textContent = 'Connexion indisponible sur ce navigateur.';
+  }
+});
+document.querySelectorAll('.logout').forEach(b => b.addEventListener('click', () => setAuth(false)));
+$('#nav-auth').addEventListener('click', e => { if (auth || me) { e.preventDefault(); setAuth(false); } });
+refresh();
+
+/* Pages : le site, et la page de connexion (#connexion) */
+const TITLE = document.title;
+let wasLogin = true;
+function route(focus) {
+  const login = ['', '#', '#connexion'].includes(location.hash);
+  const back = wasLogin && !login;
+  wasLogin = login;
+  $('#site').hidden = login;
+  $('#page-login').hidden = !login;
+  document.title = login ? 'Connexion — GIGN (site non officiel)' : TITLE;
+  if (login) {
+    window.scrollTo(0, 0);
+    if (!auth && focus) $('#f-login').ident.focus();
+  } else if (back) {
+    const t = location.hash.length > 1 && document.getElementById(location.hash.slice(1));
+    if (t) t.scrollIntoView(); else window.scrollTo(0, 0);
+  }
+}
+window.addEventListener('hashchange', () => route(true));
+route();
+
+/* Base de données partagée, en temps réel */
+async function connectDb() {
+  const timer = setTimeout(() => setSync('Données partagées injoignables pour l’instant : l’affichage peut être périmé.'), 10000);
+  const fail = msg => { clearTimeout(timer); loaded = true; setSync(msg); refresh(); };
+  try {
+    db = window.claude ? await window.claude.use('db') : null;
+    if (!db) return fail('Données partagées indisponibles : ouvrez ce lien en étant connecté à Claude.');
+    const user = await window.claude.use('user');
+    live = (user && user.can ? await user.can('data.write') : null) !== false;
+    db.collection('agents').onSnapshot(snap => {
+      clearTimeout(timer);
+      agents = snap.docs.map(d => JSON.parse(JSON.stringify(d.data()))).sort((a, b) => a.id - b.id);
+      shadow = new Map(agents.map(a => [String(a.id), sig(a)]));
+      setSync(live ? 'Données partagées en temps réel.' : 'Données partagées en temps réel, en lecture seule : vous ne pouvez pas les modifier.');
+      if (loaded) { render(); renderRap(); } else { loaded = true; refresh(); }
+    }, () => fail('Base de données indisponible.'));
+    db.collection('plaintes').orderBy('createdAt', 'desc').limit(100).onSnapshot(snap => {
+      plaintes = snap.docs.map(d => d.data());
+      renderPl();
+    }, () => {});
+    db.collection('casiers').orderBy('createdAt', 'desc').limit(200).onSnapshot(snap => {
+      casiers = snap.docs.map(d => d.data());
+      renderCas();
+    }, () => {});
+    db.collection('rapports').orderBy('createdAt', 'desc').limit(100).onSnapshot(snap => {
+      rapports = snap.docs.map(d => d.data());
+      autoPay();
+      renderRap();
+    }, () => {});
+  } catch (err) {
+    fail('Base de données indisponible.');
+  }
+}
+
+function autoPay() {
+  const f = $('#f-paie');
+  if (!auth && me && getAgent(me) && f.mois.value && f.agent.value) f.dispatchEvent(new Event('submit', { cancelable: true }));
+}
+
+function det(pairs) {
+  return '<dl class="det">' + pairs.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v === undefined || v === null || v === '' ? '—' : v)}</dd></div>`).join('') + '</dl>';
+}
+
+function renderRap() {
+  const box = $('#rapports');
+  if (!(auth || (me && getAgent(me)))) { box.innerHTML = ''; return; }
+  const mine = auth ? rapports : rapports.filter(r => r.agentId === me);
+  box.innerHTML = mine.length ? mine.map(r => `
+    <article class="acte doc">
+      <h4>Rapport d’intervention</h4>
+      <p><strong>${esc(r.auteur)}</strong> (${esc(r.mat)}), rédigé le ${new Date(r.createdAt).toLocaleDateString('fr-FR')}</p>
+      ${det([['Date et heure', r.quand ? new Date(r.quand).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' }) : '—'], ['Lieu', r.lieu], ['Type', r.type], ['Niveau d’alerte', r.alerte], ['Effectifs engagés', r.effectifs], ['Unités en appui', r.appui], ['Durée', r.duree != null ? r.duree + ' min' : '—'], ['Suspects interpellés', r.suspects], ['Victimes ou otages', r.victimes], ['Blessés', r.blesses], ['Armes saisies', r.armes], ['Résultat', r.resultat]])}
+      <h5>Compte rendu</h5>
+      <p class="txt">${esc(r.texte)}</p>
+      <h5>Observations et suites à donner</h5>
+      <p class="txt">${esc(r.suites || '—')}</p>
+      <p class="fictif">Document fictif, sans valeur officielle.</p>
+      
+      
+      ${auth && live ? `<button type="button" class="lnk" data-delrap="${esc(r.id)}">Supprimer le rapport</button>` : ''}
+    </article>`).join('') : '<p>Aucun rapport pour le moment.</p>';
+}
+
+$('#f-rap').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, a = getAgent(f.agent.value);
+  if (!a || !live || !(auth || a.id === me)) return;
+  const id = 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  try {
+    await db.collection('rapports').doc(id).set({ id, agentId: a.id, auteur: a.nom, mat: a.mat, quand: f.quand.value, type: f.type.value, alerte: f.alerte.value, lieu: f.lieu.value.trim(), effectifs: +f.effectifs.value, appui: f.appui.value, duree: +f.duree.value, suspects: +f.suspects.value, victimes: +f.victimes.value, blesses: +f.blesses.value, armes: f.armes.value, resultat: f.resultat.value, texte: f.texte.value.trim(), suites: f.suites.value.trim(), createdAt: Date.now() });
+    f.lieu.value = '';
+    f.texte.value = '';
+    f.suites.value = '';
+    f.quand.value = nowLocal();
+  } catch (err) {
+    setSync('Écriture refusée : vous n’avez pas le droit de modifier les données partagées.');
+  }
+});
+$('#rapports').addEventListener('click', async e => {
+  const id = e.target.dataset.delrap;
+  if (!id || !auth || !live) return;
+  try { await db.collection('rapports').doc(id).delete(); } catch (err) {}
+});
+
+function renderCas() {
+  const box = $('#casiers');
+  if (!(auth || (me && getAgent(me)))) { box.innerHTML = ''; return; }
+  const q = $('#q-cas').value.trim().toLowerCase();
+  const list = casiers.filter(c => !q || (c.nom + ' ' + (c.alias || '')).toLowerCase().includes(q)).sort((a, b) => b.danger - a.danger || a.nom.localeCompare(b.nom));
+  box.innerHTML = list.length ? list.map(c => `
+    <article class="acte doc">
+      <h4>${esc(c.nom)}${c.alias ? ` « ${esc(c.alias)} »` : ''}</h4>
+      <p>Fiche ajoutée le ${new Date(c.createdAt).toLocaleDateString('fr-FR')}</p>
+      ${det([['Statut', c.statut], ['Dangerosité', DANGER[c.danger]], ['Mandat en cours', c.mandat], ['Âge', c.age != null ? c.age + ' ans' : '—'], ['Taille', c.taille != null ? c.taille + ' cm' : '—'], ['Corpulence', c.corpulence], ['Signes distinctifs', c.signes], ['Dernier lieu connu', c.lieu], ['Organisation ou réseau', c.orga], ['Armement connu', c.armement], ['Condamnations', c.condamnations]])}
+      <h5>Faits et condamnations</h5>
+      <p class="txt">${esc(c.faits)}</p>
+      <h5>Observations</h5>
+      <p class="txt">${esc(c.notes || '—')}</p>
+      <p class="fictif">Fiche fictive, sans valeur officielle.</p>
+      ${auth && live ? `<button type="button" class="lnk" data-delcas="${esc(c.id)}">Supprimer la fiche</button>` : ''}
+    </article>`).join('') : '<p>Aucune fiche pour le moment.</p>';
+}
+
+$('#f-cas').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (!auth || !live) return;
+  const f = e.target, id = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  try {
+    await db.collection('casiers').doc(id).set({ id, nom: f.nom.value.trim(), alias: f.alias.value.trim(), age: +f.age.value, taille: +f.taille.value, corpulence: f.corpulence.value, signes: f.signes.value.trim(), lieu: f.lieu.value.trim(), orga: f.orga.value.trim(), danger: +f.danger.value, statut: f.statut.value, mandat: f.mandat.value, armement: f.armement.value, condamnations: +f.condamnations.value, faits: f.faits.value.trim(), notes: f.notes.value.trim(), createdAt: Date.now() });
+    f.reset();
+  } catch (err) {
+    setSync('Écriture refusée : vous n’avez pas le droit de modifier les données partagées.');
+  }
+});
+$('#casiers').addEventListener('click', async e => {
+  const id = e.target.dataset.delcas;
+  if (!id || !auth || !live) return;
+  try { await db.collection('casiers').doc(id).delete(); } catch (err) {}
+});
+$('#q-cas').addEventListener('input', () => renderCas());
+
+function renderPl() {
+  const box = $('#plaintes');
+  if (!(auth || (me && getAgent(me)))) { box.innerHTML = ''; return; }
+  box.innerHTML = plaintes.length ? plaintes.map(p => `
+    <article class="acte doc">
+      <h4>Plainte ${esc(p.ref)}</h4>
+      <p>Déposée le ${new Date(p.createdAt).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })}</p>
+      ${det([['Plaignant', p.nom], ['Contact', p.contact], ['Type', p.type], ['Date des faits', p.quand ? new Date(p.quand).toLocaleDateString('fr-FR') : '—'], ['Lieu', p.lieu], ['Suspect(s)', p.suspect], ['Témoin(s)', p.temoins]])}
+      <h5>Description des faits</h5>
+      <p class="txt">${esc(p.faits)}</p>
+      <p class="fictif">Plainte fictive, sans valeur officielle.</p>
+      ${auth && live ? `<button type="button" class="lnk" data-delpl="${esc(p.id)}">Supprimer la plainte</button>` : ''}
+    </article>`).join('') : '<p>Aucune plainte pour le moment.</p>';
+}
+
+$('#f-pl').quand.value = new Date().toISOString().slice(0, 10);
+$('#f-pl').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, msg = $('#pl-msg');
+  if (!loaded) { msg.textContent = 'Connexion à la base de données en cours, réessayez dans un instant.'; return; }
+  if (!live) return;
+  const id = 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  const ref = 'P-' + id.slice(-5).toUpperCase();
+  try {
+    await db.collection('plaintes').doc(id).set({ id, ref, nom: f.nom.value.trim(), contact: f.contact.value.trim(), type: f.type.value, quand: f.quand.value, lieu: f.lieu.value.trim(), faits: f.faits.value.trim(), suspect: f.suspect.value.trim(), temoins: f.temoins.value.trim(), createdAt: Date.now() });
+    msg.textContent = '';
+    $('#pl-recu').innerHTML = `<div class="acte doc"><h4>Plainte enregistrée</h4><p>Référence <strong>${ref}</strong>. Conservez-la : un agent examinera votre dossier.</p><p class="fictif">Récépissé fictif, sans valeur officielle.</p></div>`;
+    f.reset();
+    f.quand.value = new Date().toISOString().slice(0, 10);
+  } catch (err) {
+    msg.textContent = 'Dépôt refusé : vous n’avez pas le droit d’écrire dans les données partagées.';
+  }
+});
+$('#plaintes').addEventListener('click', async e => {
+  const id = e.target.dataset.delpl;
+  if (!id || !auth || !live) return;
+  try { await db.collection('plaintes').doc(id).delete(); } catch (err) {}
+});
+
+connectDb();
+
+function setGrades(f) {
+  if (!f.grade) return;
+  const a = getAgent(f.agent.value), up = f.dataset.type === 'promotion';
+  const list = a ? gradeList().filter(([, i]) => up ? i > a.grade : i < a.grade) : [];
+  f.grade.innerHTML = list.length ? options(list) : '<option value="">Aucun grade disponible</option>';
+  f.querySelector('button').disabled = !list.length;
+}
+
+function render() {
+  $('#liste').innerHTML = agents.length ? [...agents].sort((x, y) => y.grade - x.grade || x.nom.localeCompare(y.nom)).map((a, i, arr) => (i && arr[i - 1].grade === a.grade ? '' : `<h4 class="gr">${GRADES[a.grade]} <span>(${arr.filter(b => b.grade === a.grade).length})</span></h4>`) + `
+    <details class="ag">
+      <summary><strong>${esc(a.nom)}</strong><span>${a.mat}</span></summary>
+      <ul>${a.hist.length ? a.hist.map(h => `<li>${h.date} — ${esc(h.txt)}</li>`).join('') : '<li>Aucun événement au dossier.</li>'}</ul>
+      ${auth && live ? `<form class="pw" data-id="${a.id}"><label>Mot de passe de l’agent<input type="password" minlength="4" required autocomplete="new-password"></label><button class="btn sm">${a.mdp ? 'Changer' : 'Définir'} le mot de passe</button></form><button type="button" class="lnk" data-del="${a.id}">Retirer l’agent</button>` : ''}
+    </details>`).join('') : '<p>Aucun agent pour le moment.</p>';
+  document.querySelectorAll('.ags').forEach(s => {
+    const v = s.value;
+    const list = ['f-paie', 'f-rap'].includes(s.form.id) && me ? agents.filter(a => a.id === me) : agents;
+    s.innerHTML = list.map(a => `<option value="${a.id}">${esc(a.nom)} (${GRADES[a.grade]})</option>`).join('');
+    if (getAgent(v)) s.value = v;
+  });
+  document.querySelectorAll('form.dec').forEach(f => setGrades(f));
+  autoPay();
+}
+
+document.querySelectorAll('.grades').forEach(s => { s.innerHTML = options(gradeList()); });
+$('#f-paie').mois.value = new Date().toISOString().slice(0, 7);
+$('#f-paie').mois.addEventListener('change', autoPay);
+const nowLocal = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+$('#f-rap').quand.value = nowLocal();
+
+$('#f-agent').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (!auth) return;
+  const f = e.target, id = Math.max(0, ...agents.map(a => a.id)) + 1, mat = 'GIGN-' + String(id).padStart(4, '0');
+  agents.push({ id, nom: f.nom.value.trim(), mat, mdp: await sha(mat + ':' + f.mdp.value), grade: +f.grade.value, hist: [{ date: today(), txt: 'Intégration au groupe' }] });
+  f.nom.value = '';
+  f.mdp.value = '';
+  save(); render();
+});
+$('#liste').addEventListener('click', e => {
+  const id = e.target.dataset.del;
+  if (id && auth) { agents = agents.filter(a => a.id != id); save(); render(); }
+});
+
+$('#liste').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, a = getAgent(f.dataset.id);
+  if (!auth || !a) return;
+  a.mdp = await sha(a.mat + ':' + f.querySelector('input').value);
+  save(); render();
+});
+document.addEventListener('change', e => {
+  const f = e.target.closest('form.dec');
+  if (f && e.target.name === 'agent') setGrades(f);
+});
+
+document.querySelectorAll('form.dec').forEach(f => f.addEventListener('submit', e => {
+  e.preventDefault();
+  const a = getAgent(f.agent.value);
+  if (!auth) return;
+  if (!a) return;
+  const t = f.dataset.type, motif = f.motif.value.trim();
+  let titre, ligne;
+  if (t === 'blame') {
+    titre = 'Sanction\u00a0: ' + f.sanction.value;
+    ligne = 'Sanction disciplinaire prononcée à l’encontre de l’agent.';
+  } else {
+    const g = +f.grade.value;
+    titre = t === 'promotion' ? 'Décision de promotion' : 'Décision de rétrogradation';
+    ligne = `Passe du grade de ${GRADES[a.grade]} à celui de ${GRADES[g]}.`;
+    a.grade = g;
+  }
+  a.hist.unshift({ date: today(), txt: `${titre} — ${motif}` });
+  f.nextElementSibling.innerHTML = `<div class="acte"><h4>${esc(titre)}</h4><p><strong>${esc(a.nom)}</strong> (${a.mat})</p><p>${esc(ligne)}</p><p>Motif&nbsp;: ${esc(motif)}</p><p>Fait le ${today()} par le compte haut gradé.</p><p class="fictif">Document fictif, sans valeur officielle.</p></div>`;
+  f.motif.value = '';
+  save(); render();
+}));
+
+$('#f-paie').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = e.target, a = getAgent(f.agent.value);
+  if (a && !auth && a.id !== me) return;
+  if (!a) return;
+  const ym = f.mois.value;
+  const n = rapports.filter(r => r.agentId === a.id && new Date(r.quand || r.createdAt).toLocaleDateString('sv-SE').slice(0, 7) === ym).length;
+  const base = SOLDE[a.grade], risque = Math.round(base * 0.15), resid = Math.round(base * 0.03), prime = n * 40;
+  const brut = base + risque + resid + prime, ret = Math.round(brut * 0.22), net = brut - ret;
+  const eur = v => v.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' });
+  const [y, m] = f.mois.value.split('-');
+  const d = new Date(+y, m - 1, 1);
+  const mois = isNaN(d) ? esc(f.mois.value) : d.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+  $('#paie').innerHTML = `<div class="acte"><h4>Fiche de paie, ${mois}</h4>
+    <p><strong>${esc(a.nom)}</strong>, ${GRADES[a.grade]} (${a.mat})</p>
+    <table>
+      <tr><td>Solde de base</td><td>${eur(base)}</td></tr>
+      <tr><td>Prime de risque (15&nbsp;%)</td><td>${eur(risque)}</td></tr>
+      <tr><td>Indemnité de résidence (3&nbsp;%)</td><td>${eur(resid)}</td></tr>
+      <tr><td>Primes d’intervention (${n} × 40&nbsp;€)</td><td>${eur(prime)}</td></tr>
+      <tr><th>Total brut</th><th>${eur(brut)}</th></tr>
+      <tr><td>Retenues et cotisations (22&nbsp;%)</td><td>−${eur(ret)}</td></tr>
+      <tr><th>Net à payer</th><th>${eur(net)}</th></tr>
+    </table>
+    <p class="fictif">Document fictif, barème imaginaire, sans valeur officielle.</p></div>`;
+});
+
+render();
+</script>
+</body>
+</html>
