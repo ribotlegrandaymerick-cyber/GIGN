@@ -851,26 +851,83 @@ function renderRap() {
     </article>`).join('') : '<p>Aucun rapport pour le moment.</p>';
 }
 
+
 $('#f-rap').addEventListener('submit', async e => {
   e.preventDefault();
-  const f = e.target, a = getAgent(f.agent.value);
+
+  const f = e.target;
+  const a = getAgent(f.agent.value);
+
   if (!a || !live || !(auth || a.id === me)) return;
-  const id = 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
   try {
-    await db.collection('rapports').doc(id).set({ id, agentId: a.id, auteur: a.nom, mat: a.mat, quand: f.quand.value, type: f.type.value, alerte: f.alerte.value, lieu: f.lieu.value.trim(), effectifs: +f.effectifs.value, appui: f.appui.value, duree: +f.duree.value, suspects: +f.suspects.value, victimes: +f.victimes.value, blesses: +f.blesses.value, armes: f.armes.value, resultat: f.resultat.value, texte: f.texte.value.trim(), suites: f.suites.value.trim(), createdAt: Date.now() });
+    const { data: { user }, error: userError } =
+      await gignDatabase.auth.getUser();
+
+    if (userError || !user) throw userError || new Error('Utilisateur absent');
+
+    const rapport = {
+      agent_id: a.id,
+      title: f.type.value,
+      created_by: user.id,
+      content: JSON.stringify({
+        auteur: a.name,
+        matricule: a.matricule,
+        quand: f.quand.value,
+        type: f.type.value,
+        alerte: f.alerte.value,
+        lieu: f.lieu.value.trim(),
+        effectifs: Number(f.effectifs.value),
+        appui: f.appui.value,
+        duree: Number(f.duree.value),
+        suspects: Number(f.suspects.value),
+        victimes: Number(f.victimes.value),
+        blesses: Number(f.blesses.value),
+        armes: f.armes.value,
+        resultat: f.resultat.value,
+        texte: f.texte.value.trim(),
+        suites: f.suites.value.trim()
+      })
+    };
+
+    const { error } = await gignDatabase
+      .from('reports')
+      .insert(rapport);
+
+    if (error) throw error;
+
     f.lieu.value = '';
     f.texte.value = '';
     f.suites.value = '';
     f.quand.value = nowLocal();
+
+    setSync('Rapport enregistré dans Supabase.');
+
   } catch (err) {
-    setSync('Écriture refusée : vous n’avez pas le droit de modifier les données partagées.');
+    console.error('Erreur rapport :', err);
+    setSync('Écriture refusée : vérifiez les permissions Supabase.');
   }
 });
+
 $('#rapports').addEventListener('click', async e => {
   const id = e.target.dataset.delrap;
+
   if (!id || !auth || !live) return;
-  try { await db.collection('rapports').doc(id).delete(); } catch (err) {}
+
+  try {
+    const { error } = await gignDatabase
+      .from('reports')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+
+  } catch (err) {
+    console.error('Erreur suppression rapport :', err);
+    setSync('Suppression refusée.');
+  }
 });
+
 
 function renderCas() {
   const box = $('#casiers');
