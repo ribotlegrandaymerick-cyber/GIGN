@@ -1101,9 +1101,9 @@ $('#historique').addEventListener('click', async e => {
 
   const id = btn.dataset.delhistory;
 
-  if (!confirm('Supprimer définitivement cette décision de l’historique ?')) {
-    return;
-  }
+ if (!window.confirm('Supprimer définitivement cette décision ?')) {
+  return;
+}
 
   try {
     const { error } = await gignDatabase
