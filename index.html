@@ -888,30 +888,42 @@ async function connectDb() {
 
     if (reportsError) throw reportsError;
 
-    rapports = reportsData || [];
+rapports = reportsData || [];
 
-    clearTimeout(timer);
-    loaded = true;
-    live = !!session && (auth || !!me);
+const { data: historyData, error: historyError } =
+  await gignDatabase
+    .from('agent_history')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(200);
 
-    setSync(
-      live
-        ? 'Données Supabase chargées.'
-        : 'Données Supabase chargées en lecture seule.'
-    );
+if (historyError) throw historyError;
 
-    autoPay();
-    render();
-    renderPl();
-    renderCas();
-    renderRap();
-    refresh();
+historique = historyData || [];
 
-  } catch (err) {
-    console.error('Erreur Supabase :', err);
-    fail('Erreur de connexion à Supabase ou permissions insuffisantes.');
-  }
+clearTimeout(timer);
+loaded = true;
+live = !!session && (auth || !!me);
+
+setSync(
+  live
+    ? 'Données Supabase chargées.'
+    : 'Données Supabase chargées en lecture seule.'
+);
+
+autoPay();
+render();
+renderPl();
+renderCas();
+renderRap();
+refresh();
+
+} catch (err) {
+  console.error('Erreur Supabase :', err);
+  fail('Erreur de connexion à Supabase ou permissions insuffisantes.');
 }
+}
+
 
 
 function autoPay() {
