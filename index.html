@@ -1406,6 +1406,8 @@ $('#f-pl').addEventListener('submit', async e => {
     ].join('\n')
   };
 
+  console.log('Données envoyées à Supabase :', plainte);
+  
   try {
    const { error } = await gignDatabase
   .from('complaints')
