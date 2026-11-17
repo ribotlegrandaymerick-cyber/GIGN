@@ -842,24 +842,67 @@ function det(pairs) {
   return '<dl class="det">' + pairs.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v === undefined || v === null || v === '' ? '—' : v)}</dd></div>`).join('') + '</dl>';
 }
 
+
 function renderRap() {
   const box = $('#rapports');
-  if (!(auth || (me && getAgent(me)))) { box.innerHTML = ''; return; }
-  const mine = auth ? rapports : rapports.filter(r => r.agentId === me);
-  box.innerHTML = mine.length ? mine.map(r => `
-    <article class="acte doc">
-      <h4>Rapport d’intervention</h4>
-      <p><strong>${esc(r.auteur)}</strong> (${esc(r.mat)}), rédigé le ${new Date(r.createdAt).toLocaleDateString('fr-FR')}</p>
-      ${det([['Date et heure', r.quand ? new Date(r.quand).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' }) : '—'], ['Lieu', r.lieu], ['Type', r.type], ['Niveau d’alerte', r.alerte], ['Effectifs engagés', r.effectifs], ['Unités en appui', r.appui], ['Durée', r.duree != null ? r.duree + ' min' : '—'], ['Suspects interpellés', r.suspects], ['Victimes ou otages', r.victimes], ['Blessés', r.blesses], ['Armes saisies', r.armes], ['Résultat', r.resultat]])}
-      <h5>Compte rendu</h5>
-      <p class="txt">${esc(r.texte)}</p>
-      <h5>Observations et suites à donner</h5>
-      <p class="txt">${esc(r.suites || '—')}</p>
-      <p class="fictif">Document fictif, sans valeur officielle.</p>
-      
-      
-      ${auth && live ? `<button type="button" class="lnk" data-delrap="${esc(r.id)}">Supprimer le rapport</button>` : ''}
-    </article>`).join('') : '<p>Aucun rapport pour le moment.</p>';
+
+  if (!(auth || (me && getAgent(me)))) {
+    box.innerHTML = '';
+    return;
+  }
+
+  const mine = auth
+    ? rapports
+    : rapports.filter(r => r.agent_id === me);
+
+  box.innerHTML = mine.length
+    ? mine.map(r => {
+        let d = {};
+
+        try {
+          d = JSON.parse(r.content || '{}');
+        } catch (err) {
+          console.error('Rapport illisible :', err);
+        }
+
+        return `
+          <article class="acte doc">
+            <h4>Rapport d’intervention</h4>
+            <p><strong>${esc(d.auteur || 'Agent')}</strong>
+            (${esc(d.matricule || '')}),
+            rédigé le ${r.created_at
+              ? new Date(r.created_at).toLocaleDateString('fr-FR')
+              : '—'}</p>
+
+            ${det([
+              ['Date et heure', d.quand ? new Date(d.quand).toLocaleString('fr-FR') : '—'],
+              ['Lieu', d.lieu],
+              ['Type', r.title],
+              ['Niveau d’alerte', d.alerte],
+              ['Effectifs engagés', d.effectifs],
+              ['Unités en appui', d.appui],
+              ['Durée', d.duree != null ? d.duree + ' min' : '—'],
+              ['Suspects interpellés', d.suspects],
+              ['Victimes ou otages', d.victimes],
+              ['Blessés', d.blesses],
+              ['Armes saisies', d.armes],
+              ['Résultat', d.resultat]
+            ])}
+
+            <h5>Compte rendu</h5>
+            <p class="txt">${esc(d.texte || '')}</p>
+
+            <h5>Observations et suites à donner</h5>
+            <p class="txt">${esc(d.suites || '—')}</p>
+
+            <p class="fictif">Document fictif, sans valeur officielle.</p>
+
+            ${auth && live
+              ? `<button type="button" class="lnk" data-delrap="${esc(r.id)}">Supprimer le rapport</button>`
+              : ''}
+          </article>`;
+      }).join('')
+    : '<p>Aucun rapport pour le moment.</p>';
 }
 
 
