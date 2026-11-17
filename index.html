@@ -1407,13 +1407,13 @@ $('#f-pl').addEventListener('submit', async e => {
   };
 
   try {
-    const { data, error } = await gignDatabase
-      .from('complaints')
-      .insert(plainte)
-      .select()
-      .single();
+   const { error } = await gignDatabase
+  .from('complaints')
+  .insert(plainte);
 
-    if (error) throw error;
+if (error) throw error;
+
+const ref = 'P-' + Date.now().toString(36).toUpperCase();
 
     msg.textContent = '';
 
