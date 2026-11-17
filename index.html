@@ -1020,6 +1020,16 @@ function renderPl() {
     return;
   }
 
+ 
+function renderPl() {
+  const box = $('#plaintes');
+  if (!box) return;
+
+  if (!auth && !me) {
+    box.innerHTML = '';
+    return;
+  }
+
   box.innerHTML = plaintes.length
     ? plaintes.map(p => `
         <article class="acte doc">
@@ -1031,12 +1041,16 @@ function renderPl() {
               : '—'
           }</p>
           <p class="txt">${esc(p.description || '')}</p>
+          ${auth ? `
+            <button class="btn sm danger" data-delpl="${esc(p.id)}">
+              Supprimer
+            </button>
+          ` : ''}
         </article>
       `).join('')
     : '<p>Aucune plainte enregistrée.</p>';
 }
   
-
 function renderHistorique() {
   const box = $('#historique');
   if (!box) return;
