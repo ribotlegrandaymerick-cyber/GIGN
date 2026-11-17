@@ -1448,11 +1448,41 @@ const ref = 'P-' + Date.now().toString(36).toUpperCase();
     msg.textContent = 'Dépôt refusé : vérifiez les autorisations Supabase.';
   }
 });
+
 $('#plaintes').addEventListener('click', async e => {
-  const id = e.target.dataset.delpl;
-  if (!id || !auth || !live) return;
-  try { await db.collection('plaintes').doc(id).delete(); } catch (err) {}
+  const btn = e.target.closest('[data-delpl]');
+  if (!btn || !auth || !live) return;
+
+  const id = btn.dataset.delpl;
+
+  if (!confirm('Voulez-vous vraiment supprimer cette plainte ?')) return;
+
+  try {
+    const { data, error } = await gignDatabase
+      .from('complaints')
+      .delete()
+      .eq('id', id)
+      .select('id')
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data) {
+      alert('Suppression refusée : vérifiez les autorisations Supabase.');
+      return;
+    }
+
+    const index = plaintes.findIndex(p => p.id === id);
+    if (index !== -1) plaintes.splice(index, 1);
+
+    renderPl();
+    alert('Plainte supprimée.');
+  } catch (err) {
+    console.error('Erreur suppression plainte :', err);
+    alert('Impossible de supprimer cette plainte.');
+  }
 });
+
 
 connectDb();
 
