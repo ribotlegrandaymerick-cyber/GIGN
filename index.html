@@ -593,27 +593,60 @@ function setMe(id) {
   refresh();
 }
 
+
 function refresh() {
   const ag = me && getAgent(me);
+
   if (!ag && loaded) me = null;
+
   const v = auth || !!ag;
-  document.documentElement.dataset.role = auth ? 'admin' : ag ? 'agent' : 'visiteur';
+
+  document.documentElement.dataset.role =
+    auth ? 'admin' : ag ? 'agent' : 'visiteur';
+
   $('.top .mark').setAttribute('href', v ? '#accueil' : '#plainte');
   $('#box-out').hidden = v;
   $('#box-in').hidden = !v;
   $('#statut').hidden = !v;
-  $('#statut-txt').textContent = auth ? 'Connecté avec le compte haut gradé : la gestion des agents est déverrouillée.' : ag ? `Connecté en tant que ${ag.nom} (${ag.mat}) : rapports d’intervention et fiche de paie personnelle.` : '';
-  $('#who').textContent = auth ? 'Vous êtes connecté avec le compte haut gradé.' : ag ? `Vous êtes connecté en tant que ${ag.nom} (${ag.mat}).` : '';
-  $('#skip').textContent = v ? 'Accéder au site' : 'Continuer en invité (porter plainte)';
+
+  $('#statut-txt').textContent = auth
+    ? 'Connecté avec le compte haut gradé : la gestion des agents est déverrouillée.'
+    : ag
+      ? `Connecté en tant que ${ag.name} (${ag.matricule}) : rapports d’intervention et fiche de paie personnelle.`
+      : '';
+
+  $('#who').textContent = auth
+    ? 'Vous êtes connecté avec le compte haut gradé.'
+    : ag
+      ? `Vous êtes connecté en tant que ${ag.name} (${ag.matricule}).`
+      : '';
+
+  $('#skip').textContent = v
+    ? 'Accéder au site'
+    : 'Continuer en invité (porter plainte)';
+
   $('#skip').setAttribute('href', v ? '#accueil' : '#plainte');
   $('#nav-auth').textContent = v ? 'Déconnexion' : 'Connexion';
+
   const rw = auth && live;
-  document.querySelectorAll('.gate').forEach(g => { g.hidden = auth; });
-  document.querySelectorAll('form.dec, #f-agent').forEach(f => { f.inert = !rw; });
+
+  document.querySelectorAll('.gate').forEach(g => {
+    g.hidden = auth;
+  });
+
+  document.querySelectorAll('form.dec, #f-agent').forEach(f => {
+    f.inert = !rw;
+  });
+
   $('#f-paie').inert = !v;
   $('#gate-paie').hidden = v;
+
   $('#gate-rap').hidden = v && (live || !loaded);
-  $('#gate-rap').innerHTML = v ? 'Votre accès est en lecture seule : demandez au propriétaire le droit « Contributeur » pour rédiger un rapport.' : 'Connectez-vous pour rédiger et consulter les rapports. <a href="#connexion">Se connecter</a>';
+
+  $('#gate-rap').innerHTML = v
+    ? 'Votre accès est en lecture seule : demandez au propriétaire le droit « Contributeur » pour rédiger un rapport.'
+    : 'Connectez-vous pour rédiger et consulter les rapports. <a href="#connexion">Se connecter</a>';
+
   $('#f-rap').inert = !(v && live);
   $('#gate-cas').hidden = v;
   $('#cas-box').hidden = !v;
@@ -621,12 +654,18 @@ function refresh() {
   $('#gate-pl').hidden = live || !loaded;
   $('#f-pl').inert = !live;
   $('#gate-plr').hidden = v;
+
   renderPl();
   renderCas();
-  document.querySelectorAll('.out').forEach(o => { o.textContent = ''; });
+
+  document.querySelectorAll('.out').forEach(o => {
+    o.textContent = '';
+  });
+
   renderRap();
   render();
 }
+
 
 $('#f-login').addEventListener('submit', async e => {
   e.preventDefault();
