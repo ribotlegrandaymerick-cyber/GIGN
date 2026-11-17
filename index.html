@@ -656,8 +656,8 @@ function refresh() {
   $('#gate-cas').hidden = v;
   $('#cas-box').hidden = !v;
   $('#f-cas').inert = !rw;
-  $('#gate-pl').hidden = live || !loaded;
-  $('#f-pl').inert = !live;
+  $('#gate-pl').hidden = loaded;
+  $('#f-pl').inert = !loaded;
   $('#gate-plr').hidden = v;
 
   renderPl();
