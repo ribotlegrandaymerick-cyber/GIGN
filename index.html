@@ -1010,15 +1010,6 @@ function renderRap() {
       }).join('')
     : '<p>Aucun rapport pour le moment.</p>';
 }
- 
-function renderPl() {
-  const box = $('#plaintes');
-  if (!box) return;
-
-  if (!auth && !me) {
-    box.innerHTML = '';
-    return;
-  }
   
   function renderPl() {
   const box = $('#plaintes');
