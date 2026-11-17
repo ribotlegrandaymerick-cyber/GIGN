@@ -1033,6 +1033,7 @@ function renderPl() {
     : '<p>Aucune plainte enregistrée.</p>';
 }
   
+
 function renderHistorique() {
   const box = $('#historique');
   if (!box) return;
@@ -1042,35 +1043,89 @@ function renderHistorique() {
     return;
   }
 
-  box.innerHTML = historique.length
-    ? historique.map(h => {
-        let d = {};
+  const categories = [
+    { id: 'promotion', titre: 'Promotions' },
+    { id: 'derank', titre: 'Rétrogradations' },
+    { id: 'blame', titre: 'Blâmes' }
+  ];
 
-        try {
-          d = JSON.parse(h.details || '{}');
-        } catch (err) {
-          console.error('Historique illisible :', err);
-        }
+  box.innerHTML = categories.map(cat => {
+    const decisions = historique.filter(h => h.action === cat.id);
 
-        return `
-          <article class="acte doc">
-            <h4>${esc(d.titre || h.action)}</h4>
-            <p>${esc(d.ligne || '')}</p>
-            <p><strong>Motif :</strong></p>
-            <p class="txt">${esc(d.motif || 'Aucun motif enregistré')}</p>
-            <p>
-              <strong>Date :</strong>
-              ${h.created_at
-                ? new Date(h.created_at).toLocaleString('fr-FR')
-                : '—'}
-            </p>
-          </article>
-        `;
-      }).join('')
-    : '<p>Aucune décision enregistrée.</p>';
-}  
+    return `
+      <section class="historique-categorie">
+        <h3>${cat.titre} (${decisions.length})</h3>
+
+        ${decisions.length
+          ? decisions.map(h => {
+              let d = {};
+
+              try {
+                d = JSON.parse(h.details || '{}');
+              } catch (err) {
+                console.error('Historique illisible :', err);
+              }
+
+              return `
+                <article class="acte doc">
+                  <h4>${esc(d.titre || h.action)}</h4>
+                  <p>${esc(d.ligne || '')}</p>
+                  <p><strong>Motif :</strong></p>
+                  <p class="txt">${esc(d.motif || 'Aucun motif enregistré')}</p>
+                  <p>
+                    <strong>Date :</strong>
+                    ${h.created_at
+                      ? new Date(h.created_at).toLocaleString('fr-FR')
+                      : '—'}
+                  </p>
+                  <button
+                    type="button"
+                    class="lnk"
+                    data-delhistory="${esc(h.id)}">
+                    Supprimer cette décision
+                  </button>
+                </article>
+              `;
+            }).join('')
+          : '<p>Aucune décision enregistrée.</p>'}
+      </section>
+    `;
+  }).join('');
+} 
 
 
+$('#historique').addEventListener('click', async e => {
+  const btn = e.target.closest('[data-delhistory]');
+
+  if (!btn || !auth || !live) return;
+
+  const id = btn.dataset.delhistory;
+
+  if (!confirm('Supprimer définitivement cette décision de l’historique ?')) {
+    return;
+  }
+
+  try {
+    const { error } = await gignDatabase
+      .from('agent_history')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+
+    historique = historique.filter(h => h.id !== id);
+
+    renderHistorique();
+
+    setSync('Décision supprimée de l’historique.');
+
+  } catch (err) {
+    console.error('Erreur suppression décision :', err);
+    setSync('Suppression refusée : vérifiez les permissions Supabase.');
+  }
+});
+  
+  
 $('#f-rap').addEventListener('submit', async e => {
   e.preventDefault();
 
