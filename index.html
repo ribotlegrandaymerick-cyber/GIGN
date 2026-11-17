@@ -1083,37 +1083,145 @@ function renderCas() {
     </article>`).join('') : '<p>Aucune fiche pour le moment.</p>';
 }
 
+
 $('#f-cas').addEventListener('submit', async e => {
   e.preventDefault();
+
   if (!auth || !live) return;
-  const f = e.target, id = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+  const f = e.target;
+
+  const details = {
+    nom: f.nom.value.trim(),
+    alias: f.alias.value.trim(),
+    age: Number(f.age.value),
+    taille: Number(f.taille.value),
+    corpulence: f.corpulence.value,
+    signes: f.signes.value.trim(),
+    lieu: f.lieu.value.trim(),
+    orga: f.orga.value.trim(),
+    danger: Number(f.danger.value),
+    statut: f.statut.value,
+    mandat: f.mandat.value,
+    armement: f.armement.value,
+    condamnations: Number(f.condamnations.value),
+    faits: f.faits.value.trim(),
+    notes: f.notes.value.trim()
+  };
+
   try {
-    await db.collection('casiers').doc(id).set({ id, nom: f.nom.value.trim(), alias: f.alias.value.trim(), age: +f.age.value, taille: +f.taille.value, corpulence: f.corpulence.value, signes: f.signes.value.trim(), lieu: f.lieu.value.trim(), orga: f.orga.value.trim(), danger: +f.danger.value, statut: f.statut.value, mandat: f.mandat.value, armement: f.armement.value, condamnations: +f.condamnations.value, faits: f.faits.value.trim(), notes: f.notes.value.trim(), createdAt: Date.now() });
+    const { data, error } = await gignDatabase
+      .from('case_files')
+      .insert({
+        agent_id: null,
+        title: details.nom,
+        description: JSON.stringify(details)
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    casiers.unshift(data);
     f.reset();
+    renderCas();
+
+    setSync('Fiche enregistrée dans Supabase.');
+
   } catch (err) {
-    setSync('Écriture refusée : vous n’avez pas le droit de modifier les données partagées.');
+    console.error('Erreur casier :', err);
+    setSync('Impossible d’enregistrer la fiche.');
   }
 });
+
 $('#casiers').addEventListener('click', async e => {
   const id = e.target.dataset.delcas;
-  if (!id || !auth || !live) return;
-  try { await db.collection('casiers').doc(id).delete(); } catch (err) {}
-});
-$('#q-cas').addEventListener('input', () => renderCas());
 
-function renderPl() {
-  const box = $('#plaintes');
-  if (!(auth || (me && getAgent(me)))) { box.innerHTML = ''; return; }
-  box.innerHTML = plaintes.length ? plaintes.map(p => `
+  if (!id || !auth || !live) return;
+
+  try {
+    const { error } = await gignDatabase
+      .from('case_files')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+
+    casiers = casiers.filter(c => String(c.id) !== String(id));
+    renderCas();
+
+    setSync('Fiche supprimée.');
+
+  } catch (err) {
+    console.error('Erreur suppression casier :', err);
+    setSync('Impossible de supprimer la fiche.');
+  }
+});
+
+$('#q-cas').addEventListener('input', renderCas);
+
+
+function renderCas() {
+  const box = $('#casiers');
+
+  if (!(auth || (me && getAgent(me)))) {
+    box.innerHTML = '';
+    return;
+  }
+
+  const q = $('#q-cas').value.trim().toLowerCase();
+
+  const list = casiers.map(c => {
+    let details = {};
+
+    try {
+      details = JSON.parse(c.description || '{}');
+    } catch (err) {}
+
+    return {
+      ...details,
+      id: c.id,
+      nom: details.nom || c.title || 'Sans nom',
+      createdAt: c.created_at
+    };
+  }).filter(c =>
+    !q || (c.nom + ' ' + (c.alias || '')).toLowerCase().includes(q)
+  ).sort((a, b) =>
+    b.danger - a.danger || a.nom.localeCompare(b.nom)
+  );
+
+  box.innerHTML = list.length ? list.map(c => `
     <article class="acte doc">
-      <h4>Plainte ${esc(p.ref)}</h4>
-      <p>Déposée le ${new Date(p.createdAt).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })}</p>
-      ${det([['Plaignant', p.nom], ['Contact', p.contact], ['Type', p.type], ['Date des faits', p.quand ? new Date(p.quand).toLocaleDateString('fr-FR') : '—'], ['Lieu', p.lieu], ['Suspect(s)', p.suspect], ['Témoin(s)', p.temoins]])}
-      <h5>Description des faits</h5>
-      <p class="txt">${esc(p.faits)}</p>
-      <p class="fictif">Plainte fictive, sans valeur officielle.</p>
-      ${auth && live ? `<button type="button" class="lnk" data-delpl="${esc(p.id)}">Supprimer la plainte</button>` : ''}
-    </article>`).join('') : '<p>Aucune plainte pour le moment.</p>';
+      <h4>${esc(c.nom)}${c.alias ? ` « ${esc(c.alias)} »` : ''}</h4>
+      <p>Fiche ajoutée le ${
+        c.createdAt
+          ? new Date(c.createdAt).toLocaleDateString('fr-FR')
+          : '—'
+      }</p>
+      ${det([
+        ['Statut', c.statut],
+        ['Dangerosité', DANGER[c.danger] || '—'],
+        ['Mandat en cours', c.mandat],
+        ['Âge', c.age != null ? c.age + ' ans' : '—'],
+        ['Taille', c.taille != null ? c.taille + ' cm' : '—'],
+        ['Corpulence', c.corpulence],
+        ['Signes distinctifs', c.signes],
+        ['Dernier lieu connu', c.lieu],
+        ['Organisation ou réseau', c.orga],
+        ['Armement connu', c.armement],
+        ['Condamnations', c.condamnations]
+      ])}
+      <h5>Faits et condamnations</h5>
+      <p class="txt">${esc(c.faits || '')}</p>
+      <h5>Observations</h5>
+      <p class="txt">${esc(c.notes || '—')}</p>
+      <p class="fictif">Fiche fictive, sans valeur officielle.</p>
+      ${auth && live ? `
+        <button type="button" class="lnk" data-delcas="${esc(c.id)}">
+          Supprimer la fiche
+        </button>` : ''}
+    </article>
+  `).join('') : '<p>Aucune fiche pour le moment.</p>';
 }
 
 $('#f-pl').quand.value = new Date().toISOString().slice(0, 10);
