@@ -924,8 +924,13 @@ renderHistorique();
 refresh();
 
 } catch (err) {
-  console.error('Erreur Supabase :', err);
-  fail('Erreur de connexion à Supabase ou permissions insuffisantes.');
+  console.error('Erreur Supabase détaillée :', err);
+  console.error('Message :', err.message);
+  console.error('Code :', err.code);
+  console.error('Détails :', err.details);
+  console.error('Cause :', err.hint);
+
+  fail('Erreur Supabase : ' + (err.message || 'Erreur inconnue'));
 }
 }
 
