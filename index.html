@@ -1161,27 +1161,118 @@ document.addEventListener('change', e => {
   if (f && e.target.name === 'agent') setGrades(f);
 });
 
-document.querySelectorAll('form.dec').forEach(f => f.addEventListener('submit', e => {
-  e.preventDefault();
-  const a = getAgent(f.agent.value);
-  if (!auth) return;
-  if (!a) return;
-  const t = f.dataset.type, motif = f.motif.value.trim();
-  let titre, ligne;
-  if (t === 'blame') {
-    titre = 'Sanction\u00a0: ' + f.sanction.value;
-    ligne = 'Sanction disciplinaire prononcée à l’encontre de l’agent.';
-  } else {
-    const g = +f.grade.value;
-    titre = t === 'promotion' ? 'Décision de promotion' : 'Décision de rétrogradation';
-    ligne = `Passe du grade de ${GRADES[a.grade]} à celui de ${GRADES[g]}.`;
-    a.grade = g;
-  }
-  a.hist.unshift({ date: today(), txt: `${titre} — ${motif}` });
-  f.nextElementSibling.innerHTML = `<div class="acte"><h4>${esc(titre)}</h4><p><strong>${esc(a.nom)}</strong> (${a.mat})</p><p>${esc(ligne)}</p><p>Motif&nbsp;: ${esc(motif)}</p><p>Fait le ${today()} par le compte haut gradé.</p><p class="fictif">Document fictif, sans valeur officielle.</p></div>`;
-  f.motif.value = '';
-  save(); render();
-}));
+document.querySelectorAll('form.dec').forEach(f =>
+  f.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    if (!auth) return;
+
+    const a = getAgent(f.agent.value);
+    if (!a) return;
+
+    const t = f.dataset.type;
+    const motif = f.motif.value.trim();
+    const oldGrade = typeof a.grade === 'number'
+      ? GRADES[a.grade]
+      : a.grade;
+
+    let titre;
+    let ligne;
+    let newGrade = oldGrade;
+
+    if (!motif) return;
+
+    if (t === 'blame') {
+      titre = 'Sanction : ' + f.sanction.value;
+      ligne = 'Sanction disciplinaire prononcée à l’encontre de l’agent.';
+    } else {
+      const gradeIndex = Number(f.grade.value);
+      newGrade = GRADES[gradeIndex];
+
+      if (!newGrade) return;
+
+      titre = t === 'promotion'
+        ? 'Décision de promotion'
+        : 'Décision de rétrogradation';
+
+      ligne = `Passe du grade de ${oldGrade} à celui de ${newGrade}.`;
+    }
+
+    const details = {
+      titre,
+      motif,
+      ligne,
+      ancien_grade: oldGrade,
+      nouveau_grade: newGrade,
+      sanction: t === 'blame' ? f.sanction.value : null,
+      date: new Date().toISOString()
+    };
+
+    try {
+      const { data: { user }, error: userError } =
+        await gignDatabase.auth.getUser();
+
+      if (userError || !user) {
+        throw new Error('Session administrateur invalide.');
+      }
+
+      if (t !== 'blame') {
+        const { error: updateError } =
+          await gignDatabase
+            .from('agents')
+            .update({ grade: newGrade })
+            .eq('id', a.id);
+
+        if (updateError) throw updateError;
+      }
+
+      const { error: historyError } =
+        await gignDatabase
+          .from('agent_history')
+          .insert({
+            agent_id: a.id,
+            action: t,
+            details: JSON.stringify(details)
+          });
+
+      if (historyError) {
+        if (t !== 'blame') {
+          await gignDatabase
+            .from('agents')
+            .update({ grade: oldGrade })
+            .eq('id', a.id);
+        }
+
+        throw historyError;
+      }
+
+      if (t !== 'blame') {
+        a.grade = newGrade;
+      }
+
+      f.motif.value = '';
+
+      render();
+
+      f.nextElementSibling.innerHTML = `
+        <div class="acte">
+          <h4>${esc(titre)}</h4>
+          <p><strong>${esc(a.name)}</strong> (${esc(a.matricule)})</p>
+          <p>${esc(ligne)}</p>
+          <p>Motif : ${esc(motif)}</p>
+          <p>Fait le ${today()} par le compte haut gradé.</p>
+          <p class="fictif">Document fictif, sans valeur officielle.</p>
+        </div>`;
+
+      setSync('Décision enregistrée dans Supabase.');
+
+    } catch (err) {
+      console.error('Erreur décision :', err);
+      setSync('Erreur : impossible d’enregistrer cette décision. Vérifiez les permissions Supabase.');
+    }
+  })
+);
+
 
 $('#f-paie').addEventListener('submit', e => {
   e.preventDefault();
