@@ -998,6 +998,42 @@ function renderRap() {
     : '<p>Aucun rapport pour le moment.</p>';
 }
 
+function renderHistorique() {
+  const box = $('#historique');
+  if (!box) return;
+
+  if (!auth) {
+    box.innerHTML = '';
+    return;
+  }
+
+  box.innerHTML = historique.length
+    ? historique.map(h => {
+        let d = {};
+
+        try {
+          d = JSON.parse(h.details || '{}');
+        } catch (err) {
+          console.error('Historique illisible :', err);
+        }
+
+        return `
+          <article class="acte doc">
+            <h4>${esc(d.titre || h.action)}</h4>
+            <p>${esc(d.ligne || '')}</p>
+            <p><strong>Motif :</strong></p>
+            <p class="txt">${esc(d.motif || 'Aucun motif enregistré')}</p>
+            <p>
+              <strong>Date :</strong>
+              ${h.created_at
+                ? new Date(h.created_at).toLocaleString('fr-FR')
+                : '—'}
+            </p>
+          </article>
+        `;
+      }).join('')
+    : '<p>Aucune décision enregistrée.</p>';
+}  
 
 $('#f-rap').addEventListener('submit', async e => {
   e.preventDefault();
