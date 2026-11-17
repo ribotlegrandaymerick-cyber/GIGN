@@ -1356,32 +1356,81 @@ document.querySelectorAll('form.dec').forEach(f =>
 );
 
 
+
 $('#f-paie').addEventListener('submit', e => {
   e.preventDefault();
-  const f = e.target, a = getAgent(f.agent.value);
-  if (a && !auth && a.id !== me) return;
-  if (!a) return;
+
+  const f = e.target;
+  const a = getAgent(f.agent.value);
+
+  if (!a || (!auth && String(a.id) !== String(me))) return;
+
   const ym = f.mois.value;
-  const n = rapports.filter(r => r.agentId === a.id && new Date(r.quand || r.createdAt).toLocaleDateString('sv-SE').slice(0, 7) === ym).length;
-  const base = SOLDE[a.grade], risque = Math.round(base * 0.15), resid = Math.round(base * 0.03), prime = n * 40;
-  const brut = base + risque + resid + prime, ret = Math.round(brut * 0.22), net = brut - ret;
-  const eur = v => v.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' });
-  const [y, m] = f.mois.value.split('-');
-  const d = new Date(+y, m - 1, 1);
-  const mois = isNaN(d) ? esc(f.mois.value) : d.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-  $('#paie').innerHTML = `<div class="acte"><h4>Fiche de paie, ${mois}</h4>
-    <p><strong>${esc(a.nom)}</strong>, ${GRADES[a.grade]} (${a.mat})</p>
-    <table>
-      <tr><td>Solde de base</td><td>${eur(base)}</td></tr>
-      <tr><td>Prime de risque (15&nbsp;%)</td><td>${eur(risque)}</td></tr>
-      <tr><td>Indemnité de résidence (3&nbsp;%)</td><td>${eur(resid)}</td></tr>
-      <tr><td>Primes d’intervention (${n} × 40&nbsp;€)</td><td>${eur(prime)}</td></tr>
-      <tr><th>Total brut</th><th>${eur(brut)}</th></tr>
-      <tr><td>Retenues et cotisations (22&nbsp;%)</td><td>−${eur(ret)}</td></tr>
-      <tr><th>Net à payer</th><th>${eur(net)}</th></tr>
-    </table>
-    <p class="fictif">Document fictif, barème imaginaire, sans valeur officielle.</p></div>`;
+
+  // Compter les rapports de l'agent pour le mois choisi
+  const n = rapports.filter(r => {
+    if (String(r.agent_id) !== String(a.id)) return false;
+
+    let contenu = {};
+    try {
+      contenu = JSON.parse(r.content || '{}');
+    } catch (err) {}
+
+    const date = contenu.quand || r.created_at || '';
+    return String(date).slice(0, 7) === ym;
+  }).length;
+
+  const gradeIndex = typeof a.grade === 'number'
+    ? a.grade
+    : GRADES.indexOf(a.grade);
+
+  if (gradeIndex < 0 || gradeIndex >= SOLDE.length) {
+    setSync('Grade invalide : impossible de calculer la fiche de paie.');
+    return;
+  }
+
+  const base = SOLDE[gradeIndex];
+  const risque = Math.round(base * 0.15);
+  const resid = Math.round(base * 0.03);
+  const prime = n * 40;
+
+  const brut = base + risque + resid + prime;
+  const ret = Math.round(brut * 0.22);
+  const net = brut - ret;
+
+  const eur = v => v.toLocaleString('fr-FR', {
+    style: 'currency',
+    currency: 'EUR'
+  });
+
+  const [y, m] = ym.split('-');
+  const d = new Date(+y, Number(m) - 1, 1);
+
+  const mois = isNaN(d)
+    ? esc(ym)
+    : d.toLocaleDateString('fr-FR', {
+        month: 'long',
+        year: 'numeric'
+      });
+
+  $('#paie').innerHTML = `
+    <div class="acte">
+      <h4>Fiche de paie, ${mois}</h4>
+      <p><strong>${esc(a.name)}</strong>,
+      ${esc(a.grade)} (${esc(a.matricule)})</p>
+      <table>
+        <tr><td>Solde de base</td><td>${eur(base)}</td></tr>
+        <tr><td>Prime de risque (15 %)</td><td>${eur(risque)}</td></tr>
+        <tr><td>Indemnité de résidence (3 %)</td><td>${eur(resid)}</td></tr>
+        <tr><td>Primes d’intervention (${n} × 40 €)</td><td>${eur(prime)}</td></tr>
+        <tr><th>Total brut</th><th>${eur(brut)}</th></tr>
+        <tr><td>Retenues et cotisations (22 %)</td><td>−${eur(ret)}</td></tr>
+        <tr><th>Net à payer</th><th>${eur(net)}</th></tr>
+      </table>
+      <p class="fictif">Document fictif, barème imaginaire, sans valeur officielle.</p>
+    </div>`;
 });
+
 
 render();
 </script>
