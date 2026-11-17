@@ -899,8 +899,10 @@ const { data: historyData, error: historyError } =
     .order('created_at', { ascending: false })
     .limit(200);
 
-if (historyError) throw historyError;
-
+if (historyError) {
+  console.error('ERREUR AGENT_HISTORY :', historyError);
+  throw historyError;
+}
 historique = historyData || [];
 
 clearTimeout(timer);
