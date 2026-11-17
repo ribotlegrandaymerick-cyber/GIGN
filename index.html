@@ -1019,6 +1019,15 @@ function renderPl() {
     box.innerHTML = '';
     return;
   }
+  
+  function renderPl() {
+  const box = $('#plaintes');
+  if (!box) return;
+
+  if (!auth && !me) {
+    box.innerHTML = '';
+    return;
+  }
 
   box.innerHTML = plaintes.length
     ? plaintes.map(p => `
