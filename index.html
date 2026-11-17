@@ -1008,6 +1008,31 @@ function renderRap() {
     : '<p>Aucun rapport pour le moment.</p>';
 }
 
+function renderPl() {
+  const box = $('#plaintes');
+  if (!box) return;
+
+  if (!auth && !me) {
+    box.innerHTML = '';
+    return;
+  }
+
+  box.innerHTML = plaintes.length
+    ? plaintes.map(p => `
+        <article class="acte doc">
+          <h4>${esc(p.subject || 'Plainte')}</h4>
+          <p><strong>Plaignant :</strong> ${esc(p.name || 'Anonyme')}</p>
+          <p><strong>Date :</strong> ${
+            p.created_at
+              ? new Date(p.created_at).toLocaleString('fr-FR')
+              : '—'
+          }</p>
+          <p class="txt">${esc(p.description || '')}</p>
+        </article>
+      `).join('')
+    : '<p>Aucune plainte enregistrée.</p>';
+}
+  
 function renderHistorique() {
   const box = $('#historique');
   if (!box) return;
