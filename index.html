@@ -547,7 +547,7 @@ document.querySelectorAll('[data-tab]').forEach(a => a.addEventListener('click',
 /* Données des agents */
 const GRADES = ['Gendarme', 'Maréchal des logis-chef', 'Adjudant', 'Adjudant-chef', 'Major', 'Sous-lieutenant', 'Lieutenant', 'Capitaine', 'Commandant', 'Lieutenant-colonel', 'Colonel'];
 const SOLDE = [2100, 2400, 2700, 3000, 3300, 3500, 3800, 4300, 4900, 5600, 6500];
-let agents = [], rapports = [], casiers = [], plaintes = [], db = null, live = false, loaded = false, shadow = new Map();
+let agents = [], rapports = [], casiers = [], plaintes = [], historique = [], db = null, live = false, loaded = false, shadow = new Map();
 const DANGER = ['Faible', 'Moyenne', 'Élevée', 'Extrême'];
 const sig = v => v && typeof v === 'object' ? (Array.isArray(v) ? '[' + v.map(sig) + ']' : '{' + Object.keys(v).sort().map(k => k + ':' + sig(v[k])) + '}') : JSON.stringify(v);
 const setSync = t => { $('#sync').textContent = t; };
