@@ -1070,6 +1070,7 @@ function renderHistorique() {
     : '<p>Aucune décision enregistrée.</p>';
 }  
 
+
 $('#f-rap').addEventListener('submit', async e => {
   e.preventDefault();
 
@@ -1082,7 +1083,9 @@ $('#f-rap').addEventListener('submit', async e => {
     const { data: { user }, error: userError } =
       await gignDatabase.auth.getUser();
 
-    if (userError || !user) throw userError || new Error('Utilisateur absent');
+    if (userError || !user) {
+      throw userError || new Error('Utilisateur absent');
+    }
 
     const rapport = {
       agent_id: a.id,
@@ -1108,29 +1111,35 @@ $('#f-rap').addEventListener('submit', async e => {
       })
     };
 
-    const { error } = await gignDatabase
+    const { data, error } = await gignDatabase
       .from('reports')
-      .insert(rapport);
+      .insert(rapport)
+      .select()
+      .single();
 
     if (error) throw error;
 
-    f.lieu.value = '';
-    f.texte.value = '';
-    f.suites.value = '';
+    rapports.unshift(data);
+    renderRap();
+
+    f.reset();
     f.quand.value = nowLocal();
 
-    setSync('Rapport enregistré dans Supabase.');
+    setSync('Rapport créé avec succès.');
 
   } catch (err) {
-    console.error('Erreur rapport :', err);
-    setSync('Écriture refusée : vérifiez les permissions Supabase.');
+    console.error('Erreur création rapport :', err);
+    setSync('Erreur lors de la création du rapport.');
   }
 });
 
 $('#rapports').addEventListener('click', async e => {
-  const id = e.target.dataset.delrap;
+  const btn = e.target.closest('[data-delrap]');
+  if (!btn || !auth || !live) return;
 
-  if (!id || !auth || !live) return;
+  const id = btn.dataset.delrap;
+
+  if (!confirm('Voulez-vous vraiment supprimer ce rapport ?')) return;
 
   try {
     const { error } = await gignDatabase
@@ -1140,11 +1149,18 @@ $('#rapports').addEventListener('click', async e => {
 
     if (error) throw error;
 
+    const index = rapports.findIndex(r => r.id === id);
+    if (index !== -1) rapports.splice(index, 1);
+
+    renderRap();
+    setSync('Rapport supprimé avec succès.');
+
   } catch (err) {
     console.error('Erreur suppression rapport :', err);
-    setSync('Suppression refusée.');
+    setSync('Erreur lors de la suppression du rapport.');
   }
 });
+
 
 
 function renderCas() {
