@@ -1384,19 +1384,52 @@ function renderCas() {
 $('#f-pl').quand.value = new Date().toISOString().slice(0, 10);
 $('#f-pl').addEventListener('submit', async e => {
   e.preventDefault();
-  const f = e.target, msg = $('#pl-msg');
-  if (!loaded) { msg.textContent = 'Connexion à la base de données en cours, réessayez dans un instant.'; return; }
-  if (!live) return;
-  const id = 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-  const ref = 'P-' + id.slice(-5).toUpperCase();
+
+  const f = e.target;
+  const msg = $('#pl-msg');
+
+  if (!loaded) {
+    msg.textContent = 'Base de données en cours de chargement.';
+    return;
+  }
+
+  const plainte = {
+    name: f.nom.value.trim(),
+    subject: f.type.value,
+    description: [
+      'Contact : ' + f.contact.value.trim(),
+      'Date : ' + f.quand.value,
+      'Lieu : ' + f.lieu.value.trim(),
+      'Faits : ' + f.faits.value.trim(),
+      'Suspect : ' + f.suspect.value.trim(),
+      'Témoins : ' + f.temoins.value.trim()
+    ].join('\n')
+  };
+
   try {
-    await db.collection('plaintes').doc(id).set({ id, ref, nom: f.nom.value.trim(), contact: f.contact.value.trim(), type: f.type.value, quand: f.quand.value, lieu: f.lieu.value.trim(), faits: f.faits.value.trim(), suspect: f.suspect.value.trim(), temoins: f.temoins.value.trim(), createdAt: Date.now() });
+    const { data, error } = await gignDatabase
+      .from('complaints')
+      .insert(plainte)
+      .select()
+      .single();
+
+    if (error) throw error;
+
     msg.textContent = '';
-    $('#pl-recu').innerHTML = `<div class="acte doc"><h4>Plainte enregistrée</h4><p>Référence <strong>${ref}</strong>. Conservez-la : un agent examinera votre dossier.</p><p class="fictif">Récépissé fictif, sans valeur officielle.</p></div>`;
+
+    $('#pl-recu').innerHTML = `
+      <div class="acte doc">
+        <h4>Plainte enregistrée</h4>
+        <p>Référence : ${esc(data.id)}</p>
+        <p class="fictif">Récépissé fictif, sans valeur officielle.</p>
+      </div>`;
+
     f.reset();
-    f.quand.value = new Date().toISOString().slice(0, 10);
+    $('#f-pl').quand.value = new Date().toISOString().slice(0, 10);
+
   } catch (err) {
-    msg.textContent = 'Dépôt refusé : vous n’avez pas le droit d’écrire dans les données partagées.';
+    console.error('Erreur dépôt plainte :', err);
+    msg.textContent = 'Dépôt refusé : vérifiez les autorisations Supabase.';
   }
 });
 $('#plaintes').addEventListener('click', async e => {
