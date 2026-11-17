@@ -699,7 +699,10 @@ $('#f-login').addEventListener('submit', async e => {
     } else {
       throw new Error('Rôle non autorisé');
     }
-
+    
+    live = true;
+    refresh();
+    
     msg.textContent = '';
     f.reset();
     location.hash = 'espace';
