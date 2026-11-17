@@ -739,10 +739,13 @@ $('#f-login').addEventListener('submit', async e => {
       throw new Error('Rôle non autorisé');
     }
     
-    live = true;
-    refresh();
-    
-    msg.textContent = '';
+    await connectDb();
+
+if (!live) {
+  throw new Error('Impossible de charger les données du compte.');
+}
+
+msg.textContent = '';
     f.reset();
     location.hash = 'espace';
 
